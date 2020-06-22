@@ -1,0 +1,118 @@
+// vim:ft=javascript
+
+ARG_WITH("perforce", "Perforce support", "no");
+ARG_ENABLE("perforce-shared", "Perforce shared lib", "false");
+
+if (PHP_PERFORCE != "no") {
+    if (CHECK_LIB("libclient.lib", "perforce", PHP_PERFORCE) &&
+        CHECK_LIB("librpc.lib",    "perforce", PHP_PERFORCE) &&
+		CHECK_LIB("libp4script_c.lib",	"perforce", PHP_PERFORCE) &&
+		CHECK_LIB("libp4script.lib",    	"perforce", PHP_PERFORCE) &&
+		CHECK_LIB("libp4script_sqlite.lib",	"perforce", PHP_PERFORCE) &&
+		CHECK_LIB("libp4script_curl.lib",	"perforce", PHP_PERFORCE) &&    
+        CHECK_LIB("libsupp.lib",   "perforce", PHP_PERFORCE) &&
+        CHECK_LIB("libeay32.lib",  "perforce", PHP_PERFORCE) &&
+        CHECK_LIB("ssleay32.lib",  "perforce", PHP_PERFORCE) &&
+	//CHECK_LIB("advapi32.lib",  "perforce") &&
+	//CHECK_LIB("oldnames.lib",  "perforce") &&
+	//CHECK_LIB("kernel32.lib",  "perforce") &&
+	//CHECK_LIB("ws2_32.lib",    "perforce") &&
+	//CHECK_LIB("User32.lib",    "perforce") &&
+	//CHECK_LIB("Ole32.lib",     "perforce") &&
+	//CHECK_LIB("Oleaut32.lib",  "perforce") &&
+        CHECK_LIB("Gdi32.lib",     "perforce"))
+        {
+        /* check headers. */
+        if (CHECK_HEADER_ADD_INCLUDE("clientapi.h", "CFLAGS_PERFORCE", PHP_PERFORCE + "\\include\\p4" )) 
+        /* openssl header, not needed for stub
+        && CHECK_HEADER_ADD_INCLUDE("openssl/ssl.h", "CFLAGS_PERFORCE")) */
+        {
+            var p4phpPath = ".\\ext\\p4_php";
+            if (!FSO.FolderExists(p4phpPath)) {
+                FSO.CreateFolder(p4phpPath);
+            }
+
+            /* copy Version from p4 source if it exists */
+            if (FSO.FileExists(PHP_PERFORCE + "\\sample\\Version")) {
+                FSO.CopyFile(PHP_PERFORCE + "\\sample\\Version", p4phpPath + "\\Version");
+            }
+
+            /* verify we have a Version file to work with */
+            if (FSO.FileExists(p4phpPath + "\\Version")) {
+                EXTENSION("perforce", "perforce.cc php_clientapi.cc \
+                    php_clientuser.cc php_mergedata.cc php_p4.cc \
+                    php_p4_depotfile.cc php_p4_integration.cc \
+                    php_p4_map.cc php_p4_exception.cc php_p4mapmaker.cc \
+                    php_p4_mergedata.cc php_p4_resolver.cc \
+                    php_p4_output_handler.cc php_p4_revision.cc \
+                    php_p4result.cc specmgr.cc", PHP_PERFORCE_SHARED);
+                AC_DEFINE("HAVE_PERFORCE", 1, "Define if perforce extension is enabled");
+                ADD_FLAG("CFLAGS_PERFORCE", "/DOS_NT");
+                ADD_FLAG("CFLAGS_PERFORCE", "/DCASE_INSENSITIVE");
+				ADD_FLAG("LDFLAGS_PERFORCE", "/NODEFAULTLIB:msvcrtd");
+				ADD_FLAG("LDFLAGS_PERFORCE", "/FORCE:MULTIPLE");
+
+
+                /* get information about p4api version */
+                var apiVersionFile = FSO.OpenTextFile(PHP_PERFORCE + "\\sample\\Version");
+                var apiRelease     = apiVersionFile.ReadAll();
+
+                var match = apiRelease.match(/^RELEASE\s+= (.*) ;$/m);
+                if (match) {
+                    var ID_API_REL = match[1].replace(/ /g, ".");
+                }
+
+                var match = apiRelease.match(/^PATCHLEVEL\s+= (.*) ;$/m);
+                if (match) {
+                    var ID_API_PATCH = match[1].replace(/ /g, ".");
+                }
+                apiVersionFile.Close();
+                var ID_API = ID_API_REL + "/" + ID_API_PATCH;
+
+                /* get suppdate info */
+                var versionFile = FSO.OpenTextFile(p4phpPath + "\\Version");
+                var release     = versionFile.ReadAll();
+
+                var match = release.match(/^RELEASE\s+=\s(.*) ;$/m);
+                if (match) {
+                    var ID_REL = match[1].replace(/ /g, ".");
+                }
+
+                var match = release.match(/^PATCHLEVEL\s+=\s*(.*) ;$/m);
+                if (match) {
+                    var ID_PATCH = match[1].replace(/ /g, ".");
+                }
+
+                var match = release.match(/^SUPPDATE\s+=\s(\d+)\s+(\d+)\s+(\d+) ;$/m);
+                if (match) {
+                    var ID_Y = match[1];
+                    var ID_M = match[2];
+                    var ID_D = match[3];
+                }
+                versionFile.Close();
+
+                var cl = PATH_PROG('cl', null, 'P4PHP_CL');
+                if (!cl) {
+                    ERROR("MS C++ compiler is required");
+                }
+                if (probe_binary( cl, 64)) {
+                    var ID_OS = "NTX64";
+                } else {
+                    var ID_OS = "NTX86";
+                }
+
+                AC_DEFINE("ID_REL",     ID_REL,     "Setting release ID");
+                AC_DEFINE("ID_API",     ID_API,     "Setting API ID");
+                AC_DEFINE("ID_Y",       ID_Y,       "Setting build year");
+                AC_DEFINE("ID_M",       ID_M,       "Setting build month");
+                AC_DEFINE("ID_D",       ID_D,       "Setting build day");
+                AC_DEFINE("ID_PATCH",   ID_PATCH,   "Setting the patch level");
+                AC_DEFINE("ID_OS",      ID_OS,      "Setting OS ID");
+            } else {
+                WARNING("Perforce support not enabled; no version file found.");
+            }
+        } else {
+            WARNING("Perforce support not enabled; headers not found");
+        }
+    }
+}

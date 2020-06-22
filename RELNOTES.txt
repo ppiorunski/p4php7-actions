@@ -1,0 +1,432 @@
+                           Release Notes for
+                P4PHP, Perforce's script API for PHP
+
+                            Version 2019.2
+
+Introduction
+
+    This document contains release notes for P4PHP.
+
+    Perforce numbers releases YYYY.R/CCCCC, e.g. 2009.2/234567.
+    YYYY is the year; R is the release of that year; CCCCCC is the
+    bug fix change level.  Each bug fix in these release notes is
+    marked by its change number.  Any build includes (1) all bug fixes
+    of all previous releases and (2) all bug fixes of the current
+    release up to the bug fix change level.
+
+    To determine the version of your P4PHP, run the following command:
+
+    php --ri perforce
+
+--------------------------------------------------------------------------
+
+Unix and Mac: Building the P4PHP Extension
+
+    To build P4PHP, you need the header files and libraries used by
+    PHP and the "phpize" command-line utility. Both of these
+    requirements can be met by installing PHP from source or by
+    installing the development php packages (php-devel) appropriate
+    for your operating system.
+
+    After you have obtained the required files and the phpize utility,
+    perform the following steps:
+
+    1. Download the Perforce P4PHP files. Go to the Perforce FTP site at
+       "ftp://ftp.perforce.com/perforce", go under the release
+       subdirectory and look in the bin.tools directory for a release which
+       matches your php version (5 or 7) (for example,
+       ftp://ftp.perforce.com/perforce/r19.2/bin.tools/p4php-php7.tgz) for
+       the 2019.2 P4PHP.
+
+    2. Download the Perforce C++ API from the Perforce FTP site at
+       "ftp://ftp.perforce.com/perforce". The API archive is located
+       in release and platform-specific subdirectories and is named
+       "p4api.tgz".
+
+       Note: 32-bit builds of P4PHP require a 32-bit version of the
+             C++ API and a 32-bit version of PHP. 64-bit builds of
+             P4PHP require a 64-bit version of the C++ API and a
+             64-bit version of PHP.
+
+    3. Extract both archives into an empty directory.
+
+    4. To build P4PHP, change to the p4php-<version> directory, and run
+       the following commands:
+
+           phpize
+
+           ./configure --with-perforce=<path to Perforce C++ API>
+
+           make
+
+    5. To test your P4PHP build, run the following command:
+
+           make test
+
+       Note: the test harness requires a copy of the Perforce server
+             executable, p4d, be installed in the current working
+             directory.
+
+    6. To install P4PHP, run the following command:
+
+           make install
+
+       Note: the installation typically needs to be performed as
+             the root user.
+
+    7. To enable P4PHP, edit your "php.ini" file and add the following
+       line:
+
+           extension=perforce.so;
+
+       Note: to locate your "php.ini" file, run the following command:
+
+             php --ini
+
+       Now run:
+
+             php -m
+
+       to confirm that the P4PHP module is being loaded.
+
+    8. To verify that P4PHP works, run the following command:
+
+           php --ri perforce
+
+       If the extension is correctly installed, P4PHP displays
+       its version information.
+
+    SSL support
+    -----------
+
+    Perforce Server 2019.2 supports SSL connections and the C++ API has
+    been compiled with this support. This means that in order to build
+    P4PHP, the underlying PHP framework must include OpenSSL.
+
+--------------------------------------------------------------------------
+
+Windows: Building the P4PHP DLL
+
+    For instructions how to build P4PHP on windows please contact support@perforce.com
+
+--------------------------------------------------------------------------
+
+Testing P4PHP
+
+    You can use the following small script to test P4PHP.  Place it
+    into a file named "p4php_info.php":
+
+    <?php
+    $p4 = new P4();
+    print_r($p4->identify());
+    $p4->port = '<server>:<port>';
+    $p4->user = '<user>';
+    $p4->connect();
+    print_r($p4->run('info'));
+    $p4->disconnect();
+    ?>
+
+    Note: substitute <server> for the fully qualified server name,
+          <port> for the port p4d/p4s is running on, and <user> for a
+          valid Perforce user.
+
+    To execute the test script, run the following command:
+
+        php -f p4php_info.php
+
+    If it succeeds, you should see output like this:
+
+        > php -f p4php_info.php
+
+        Perforce - The Fast Software Configuration Management System.
+        Copyright 1995-2010 Perforce Software.  All rights reserved.
+        Rev. P4PHP/NTX86/2009.2/239532 (2009.2 API) (2010/03/24).
+        Array
+
+        (
+            [0] => Array
+                (
+                    [userName] => jdoe
+                    [password] => enabled
+                    [clientName] => jdoe-ws
+                    [clientRoot] => c:\Users\jdoe\ws
+                    [clientCwd] => C:\Users\jdoe\ws
+                    [clientHost] => jdoe-host
+                    [clientAddress] => 127.0.0.1:12345
+                    [monitor] => enabled
+                    [security] => enabled
+                    [serverAddress] => jdoe-host:1666
+                    [serverRoot] => C:\Program Files\Perforce\Server
+                    [serverDate] => 2010/03/29 15:09:00 -0700
+                    [serverUptime] => 102:44:51
+                    [serverVersion] => P4D/NTX64/2016.2/1457671 (2016/10/26)
+                    [serverLicense] => none
+                )
+        )
+
+--------------------------------------------------------------------------
+
+Compatibility Statements
+
+    Server Compatibility
+
+        You can use any release of P4PHP with any release of the
+        Perforce server later than 2001.1
+
+    API Compatibility
+
+        The 2019.2 release of P4PHP requires the 2019.2 Perforce API.
+        Older releases (down to 2008.2) will not work and will fail to compile.
+
+    OpenSSL compatibility
+
+        The minimum version of OpenSSL libraries required is driven
+        by the 2019.2 server; the minimum version needed is 1.0.0.
+        Please note that many distributions provide OpenSSL version
+        0.9.8, which is not compatible.
+
+    PHP compatibility
+
+        The 2019.2 release of P4PHP is compatible with PHP versions: 7.0.x - 7.3.x
+
+    Platform compatibility
+
+        Though P4PHP is generally portable, this release is certified
+        only on the following platforms:
+
+            Linux 2.6 Intel (x86, x86_64)
+            Windows 7, 10, 2012R2, 2016 Intel (x86, x86_64)
+
+    Compiler compatibility
+
+        To build P4PHP from source, you must use a version of PHP that
+        has been compiled with the same compiler used to build the
+        Perforce C++ API. For most platforms, use gcc/g++.
+
+        Attempting to use a different compiler or a different version
+        of the compiler causes linker errors due to differences in name
+        handling.
+
+--------------------------------------------------------------------------
+
+Key to symbols used in change notes below.
+
+      * -- requires new P4PHP
+     ** -- requires P4PHP built with new P4API
+    *** -- requires new p4d server program
+
+
+--------------------------------------------------------------------------
+
+New functionality in 2019.2
+
+    #1922953 (Bug #101550) * ** ***
+        Updated the stored spec templates to match the 2019.2 server
+        specs. This ensures new features are present in specs which are
+        accessed offline.
+
+--------------------------------------------------------------------------
+
+New functionality in 2018.2
+
+    #1664628 * **
+        A new handler interface for P4LOGINSSO has been added, allowing web
+        applications to handle the callback rather than an external executable
+        being invoked.
+
+--------------------------------------------------------------------------
+
+New functionality in 2016.2
+
+    #1487051 (Bug #86758) *
+        Add support for PHP7. Since PHP5 and PHP7 are so different in their
+        implementation, two separate releases will be provided. P4PHP will continue
+        to support PHP5, while P4PHP7 is a release dedicate to PHP7.
+
+    #1478705, 1478790 (Bug #89654) * ** ***
+        Add support for proxy-like connections for both PHP5 and PHP7
+
+Bugs fixed since 2014.1/880729
+
+    #880735 (Bug #66537) *
+        Fixed an array inconsistency issue with 'run_filelog'.  It will
+        also now return the right depotpath as well.
+
+--------------------------------------------------------------------------
+
+New functionality in 2013.1
+
+    #491487, #499320, #499365 (Bug #57838) *
+        Added support for PHP 5.4.
+
+Bugs fixed since 2013.1/617119
+
+    #643056 (Bug #65572)
+        Fixed a problem in the P4 Map Lhs, Rhs and ToA methods that
+        could cause a crash when under load.
+
+    #631971 (Bug #65805)
+        Correctly set the program version if specified.
+
+Bugs fixed in 2013.1
+
+    #597731 (Bug #63968) *
+        Fixed memory leak in the output handler code.  The memory leak
+        was particularly noticeable when using output handlers with large
+        files.
+
+    #567338 (Bug #62248)
+        Test 013 'Identity' will now work correctly on Windows.
+
+    #541820, #541832 (Bug #60875) *
+        Correctly determines the kernel version for Linux builds.
+
+    #541502 (Bug #60865) *
+        Fixed a problem that caused a runtime error when running on
+        Ubuntu 12.10.
+
+--------------------------------------------------------------------------
+
+New functionality in 2012.1
+
+    #408393 (Bug #51084) * ** ***
+        Added support for SSL connections to SSL-enabled servers. No
+        build changes are needed to include SSL support, as PHP itself
+        is dynamically linked against OpenSSL libraries.
+
+        The identify() method will then report the version of the OpenSSL
+        library used for building the Perforce C++ API (not the version
+        PHP is dynamically linked against).
+
+    #Note:
+        Although the 2012.1 server now supports action-resolve, P4PHP
+        does not include support for this at this time.
+
+Bugs fixed since 2012.1/442152
+
+    #469976, #469763 (Bugs #55524, #56332) *
+        Fixed a problem where the run_filelog() method could emit
+        warnings and/or fail to populate revision objects correctly
+        under some conditions.
+
+Bugs fixed in 2012.1
+
+    #439393 (Bug #54125) *
+        Setting the 'prog' property of the P4 class now actually takes
+        effect.
+
+    #429067 (Bug #51901) *
+        Updated the stored spec templates to match the 2012.1 server
+        specs. This ensures new features are present in specs which are
+        accessed offline.
+
+--------------------------------------------------------------------------
+
+New functionality in 2011.1
+
+    #339007 (Bug #42252) * **
+        P4PHP supports a callback interface by providing a P4.handler
+        property. Set P4.handler to an instance of a
+        P4_OutputHandlerInterface implementor to enable callbacks. When
+        a handler is defined, P4PHP will invoke the handler for every
+        response it receives from the Perforce Server immediately instead
+        of collecting all results together in an array first. This can be
+        used to make applications more scalable and more responsive if
+        large results are expected.
+        See the documentation for details on the Output Handler.
+
+    #332692 (Bug #45863) * ** ***
+        Enable streams in P4PHP by default. With this change, streams
+        specific specs such as streams depots are listed. To disable the
+        listing of streams specific specs either set the api_level to a
+        value below 70 or disable stream handling by explicitly setting
+        the P4.streams property to false.
+
+Bugs fixed in 2011.1
+
+    #424881 (Bugs #42375, #51886, #51917) *
+        Fixed issues where p4 filelog could produce an erroneous result
+        or cause a segmentation fault to occur.
+
+    #385159 (Bug #49324) **
+        On Windows Vista, Windows 7, or Windows 2008, a client running
+        as Administrator would fail to properly process file names in
+        non-ASCII character sets (such as Shift-JIS).
+
+    #359248 (Bug #48691) *
+        Fixed a dangling pointer issue that caused memory segmentation
+        faults when P4PHP was run on Windows platforms.
+
+    #359180 (Bug #49040) *
+        Minor adjustments done to make P4PHP run properly on Mac OS X
+        Lion.
+
+    #342679 (Bug #47726) *
+        Fixed a bug where P4PHP would not compile on Windows platforms
+        due to the tsrm_ls variable not being present.
+
+    #339053 (Bug #47423) *
+        Made command arguments and the input property support binary
+        values which contain null bytes.
+
+    #308036, #337730 (Bugs #44695, #47235) *
+        Adjusted the version string to be consistent with other APIs.
+        Added API patch level and made OS names consistent.
+
+    #333583 (Bug #45521) *
+        Fixed a bug where P4PHP would erroneously convert custom spec
+        fields which ended in a digit into an array. They are now passed
+        through unchanged.
+
+    #332681 (Bug #47529) *
+        Updated the stored spec templates to match the 2011.1 server
+        specs. This ensures new features such as streams are present in
+        specs which are accessed offline.
+
+--------------------------------------------------------------------------
+
+New functionality in 2010.2
+
+    #262640 (Bug #39740) * ** ***
+        New methods 'GetStreams' and 'SetStreams' have been added to enable
+        Streams support.
+
+Bugs fixed in 2010.2
+
+    #289739 (Bug #43685) *
+        Fixed a bug where P4PHP could segfault when attempting to use the
+        'P4' instance during the late stages of a PHP process shutdown
+        (via object destructors), where the instance being referenced may
+        no longer be present in the zend_object_store. We guard against
+        this scenario and emit a fatal zend_error.
+
+    #273229 (Bug #41378) *
+        Fixed a pointer management bug that was causing crashes under
+        Windows 64-bit.
+
+    #264526 (Bugs #38248, #38488, #39008, #39471) *
+        P4PHP now properly picks up the version string set in config.w32
+        when compiled on a Windows platform.
+
+--------------------------------------------------------------------------
+
+New functionality in 2010.1
+
+    #238024 (Bug #38089) *
+        A new property, 'expand_sequences' enables scripts to control
+        whether keys with trailing numbers are expanded into arrays
+        in tagged output. By default, 'expand_sequences' is true to
+        maintain backwards compatibility. Note that expansion can be
+        enabled and disabled on a per-command basis.
+
+Bugs fixed in 2010.1
+
+    #238014 (Bug #38084) *
+        Tagged output with numeric sequences (e.g. foo0, foo1, ...)
+        could conflict with tags that are not numbered (e.g. foo).
+        This could cause P4PHP to crash. This change detects the
+        conflict and skips expansion.
+
+    #237983 (Bug #38074) *
+        Text output could be truncated if it contained null characters.
+        This change makes handling of text output binary-safe.
