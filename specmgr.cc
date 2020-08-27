@@ -258,6 +258,7 @@ struct defaultspec {
 	"Values;code:354;type:wlist;words:2;;"
 	"Presets;code:355;type:wlist;words:2;;"
 	"Openable;code:362;type:wlist;words:2;;"
+    "Maxwords;code:361;type:wlist;words:2;;"
 	"Comments;code:356;type:text;;"
     },
     {
@@ -274,9 +275,9 @@ struct defaultspec {
 	"allsubmit/ownersubmit,unlocked/locked,"
 	"toparent/notoparent,fromparent/nofromparent,"
     "mergedown/mergeany;open:isolate;;"
-    "Paths;code:710;rq;type:wlist;words:2;maxwords:3;len:64;open:propagate;;"
-    "Remapped;code:711;type:wlist;words:2;len:64;open:propagate;;"
-    "Ignored;code:712;type:wlist;words:1;len:64;open:propagate;;"
+	"Paths;code:710;rq;type:wlist;words:2;maxwords:3;len:64;open:propagate;fmt:C;;"
+	"Remapped;code:711;type:wlist;words:2;len:64;open:propagate;fmt:C;;"
+	"Ignored;code:712;type:wlist;words:1;len:64;open:propagate;fmt:C;;"
 	"View;code:713;type:wlist;words:2;len:64;;"
 	"ChangeView;code:714;type:llist;ro;len:64;;"
     },
@@ -473,8 +474,8 @@ SpecMgr::SpecToString( const char *type, zval *hash, StrBuf &b, Error *e )
 
     int cur;
     zend_string * key;
-    uint key_len;
-    ulong index;
+    unsigned int key_len;
+    unsigned long index;
     zval *elem, *subval;
     HashTable *ht, *ht2;
     StrBuf os, eStr; //eStr added by Karl
@@ -743,7 +744,7 @@ SpecMgr::InsertItem( zval *hash, const StrPtr *var, const StrPtr *val )
 
         if ( levelValue >= zend_hash_num_elements( Z_ARRVAL( ary ) ) ) {
             for (int i = zend_hash_num_elements( Z_ARRVAL( ary ) ); i < levelValue; i++) {
-                add_index_unset( &ary, i );
+                add_index_null( &ary, i );
             }
             array_init( &tlist );
             add_next_index_zval( &ary, &tlist );

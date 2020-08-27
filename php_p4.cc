@@ -1005,34 +1005,51 @@ PHP_METHOD(P4, run_submit)
     int argc = ZEND_NUM_ARGS();
     zval func;
     zval param0;
+    zval param1;
     zval *params;
 
     args = (zval *)safe_emalloc(argc, sizeof(zval), 0);
-    if (argc < 2 || zend_get_parameters_array_ex(argc, args) == FAILURE) {
+    if (argc < 1 || zend_get_parameters_array_ex(argc, args) == FAILURE) {
         efree(args);
         WRONG_PARAM_COUNT;
     }
 
     ZVAL_STRING(&func, "run");
     ZVAL_STRING(&param0, "submit");
+    ZVAL_STRING(&param1, "-i");
 
     object = getThis();
 
-    if (argc == 2) {
-        params = (zval *)safe_emalloc(argc, sizeof(zval), 0);
+    if (argc == 1) {
+        params = (zval *)safe_emalloc(argc + 2, sizeof(zval), 0);
         params[0] = param0;
-        /* first parameter will be submit flag(s). */
-        params[1] = args[0];
-        /* second parameter will be a hash. */
+        params[1] = param1;
+        argc = 2;
+        // third parameter will be a hash.
         client = get_client_api(object);
+        // convert args[0] to an array.
+        if (Z_TYPE(args[0]) == IS_ARRAY) {
+            client->SetInput(&args[0]);
+        }
+    } else if (argc == 2) {        
+        params = (zval *)safe_emalloc(argc + 1, sizeof(zval), 0);
+        params[0] = param0;
+        // first parameter will be submit flag(s). 
+        params[1] = args[0];
         // convert args[1] to an array
         if (Z_TYPE(args[1]) == IS_ARRAY) {
+            // second parameter will be a hash. 
+            client = get_client_api(object);
             client->SetInput(&args[1]);
+        } else {
+            // otherwise treat it as a parameter.
+            argc = 3;
+            params[2] = args[1];
         }
     } else {
         params = (zval *)safe_emalloc(argc + 1, sizeof(zval), 0);
         params[0] = param0;
-        /* feed parameters into run submit */
+        // feed parameters into run submit. 
         for (int i = 0; i < argc; i++) {
             params[i + 1] = args[i];
         }
@@ -1042,6 +1059,7 @@ PHP_METHOD(P4, run_submit)
 
     zval_dtor(&func);
     zval_dtor(&param0);
+    zval_dtor(&param1);
     efree(params);
     efree(args);
 }
@@ -1470,3 +1488,4 @@ static bool p4php_client_is_tagged(zval *this_ptr)
     client->GetTagged(&tagged);
     return ( Z_TYPE(tagged) == IS_TRUE );
 }
+                                                  

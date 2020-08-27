@@ -379,7 +379,7 @@ void PHPClientUser::InputData( StrBuf *strbuf, Error *e )
 
         zend_string *k;
         zend_ulong index;
-        uint ktype = zend_hash_get_current_key_ex( ht, &k, &index, &pos );
+        unsigned int ktype = zend_hash_get_current_key_ex( ht, &k, &index, &pos );
         bool isHash = ( ktype == HASH_KEY_IS_STRING );
 
         // treat a hash as a spec, copy it's string representation to strbuf.
@@ -392,7 +392,7 @@ void PHPClientUser::InputData( StrBuf *strbuf, Error *e )
 
         // handle one element of a vector at a time. Note, only strings are
         // supported at this time.
-        uint argc = zend_hash_num_elements( ht );
+        unsigned int argc = zend_hash_num_elements( ht );
         zval *val = zend_hash_index_find( ht, 0 );
 
         if ( Z_TYPE_P( val ) == IS_STRING ) {
@@ -743,14 +743,14 @@ PHPClientSSO::Authorize( StrDict &vars, int maxLength, StrBuf &strbuf )
 
             zend_string *k;
             zend_ulong index;
-            uint ktype = zend_hash_get_current_key_ex( ht, &k, &index, &pos );
+            unsigned int ktype = zend_hash_get_current_key_ex( ht, &k, &index, &pos );
             bool isHash = ( ktype == HASH_KEY_IS_STRING );
 
             if( !isHash )
             {
                 // handle one element of a vector at a time. Note, only strings
                 // are supported at this time.
-                uint argc = zend_hash_num_elements( ht );
+                unsigned int argc = zend_hash_num_elements( ht );
                 zval *val = zend_hash_index_find( ht, 0 );
 
                 if( Z_TYPE_P( val ) == IS_STRING ) {
