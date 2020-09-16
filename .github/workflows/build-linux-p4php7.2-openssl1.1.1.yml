@@ -24,7 +24,7 @@ jobs:
         sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
         pwd
         ls
-        sudo docker images
+        docker images
         cat /etc/group
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
         tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && rm p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
