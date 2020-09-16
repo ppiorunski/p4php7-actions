@@ -2,6 +2,9 @@ name: Build P4Php for php 7.2 linux OpenSSL 1.1.1
 
 env:
   codeline: "r20.1"
+  P4APIDIR: "/home/runner/work/p4php7/p4api"
+  P4PHPDIR: "/home/runner/work/p4php7/p4php7"
+  docker: ppiorunski/p4php7:php72-ubuntu18.04-ssl1.1.1
 
 on:
   push:
@@ -24,29 +27,16 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build P4Php 7.2 Openssl 1.1.1
+    - name: Get p4api and p4 binary
       run: |
-        sudo apt-get update
-        export DEBIAN_FRONTEND=noninteractive
-        sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
-        docker images
-        docker pull ppiorunski/p4php7:php72-ubuntu18.04-ssl1.1.1
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
         tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && rm p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
         wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4 && chmod 775 p4
         wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4d && chmod 775 p4d
-        phpize
-        ./configure --with-perforce=../p4api
-        make
-        make test
+    - name: Build P4Php 7.2 Openssl 1.1.1
+      run: |
+        docker pull $docker
+        docker run -v $P4APIDIR:/p4/build/p4api -v $P4PHPDIR:/p4/build/p4-php7 $docker
     - uses: actions/upload-artifact@v2
       with:
         path: modules/perforce.so
-
-
-#    - name: make
-#      run: make
-#    - name: make check
-#      run: make check
-#    - name: make distcheck
-#      run: make distcheck
