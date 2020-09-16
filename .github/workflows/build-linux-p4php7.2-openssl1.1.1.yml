@@ -17,6 +17,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build P4Php 7.2 Openssl 1.1.1
+      uses: docker/login-action@v1
+      with:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
       run: |
         sudo apt-get update
@@ -24,8 +28,8 @@ jobs:
         sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
         pwd
         ls
-        echo 46523500-7591-4105-80ec-5b2ae3f476af | docker login --username ppiorunski
         docker images
+        docker pull docker pull ppiorunski/p4php7:php72-ubuntu18.04-ssl1.1.1
         cat /etc/group
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
         tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && rm p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
