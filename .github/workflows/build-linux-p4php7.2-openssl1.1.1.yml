@@ -17,7 +17,11 @@ jobs:
       run: |
         sudo apt-get update
         export DEBIAN_FRONTEND=noninteractive
-        sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c
+        sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
+        pwd
+        ls
+        wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
+        
 #    - name: make
 #      run: make
 #    - name: make check
