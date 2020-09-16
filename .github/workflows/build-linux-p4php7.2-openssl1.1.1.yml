@@ -1,4 +1,5 @@
 name: Build P4Php for php 7.2 linux OpenSSL 1.1.1
+codeline: "r20.1"
 
 on:
   push:
@@ -20,10 +21,10 @@ jobs:
         sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
         pwd
         ls
-        cd .. && wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
+        cd .. && wget ftp://ftp.perforce.com/perforce/"{{codeline}}"/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
         tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && rm p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
-        wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4 && chmod 775 p4
-        wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4d && chmod 775 p4d
+        wget ftp://ftp.perforce.com/perforce/"{{codeline}}"/bin.linux26x86_64/p4 && chmod 775 p4
+        wget ftp://ftp.perforce.com/perforce/"{{codeline}}"/bin.linux26x86_64/p4d && chmod 775 p4d
         phpize
         ./configure --with-perforce=../p4api
         make
