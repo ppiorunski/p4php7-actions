@@ -20,7 +20,9 @@ jobs:
         sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
         pwd
         ls
-        wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
+        cd .. && wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
+        tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && ls -la && cd p4php7 && pwd
+        
         
 #    - name: make
 #      run: make
