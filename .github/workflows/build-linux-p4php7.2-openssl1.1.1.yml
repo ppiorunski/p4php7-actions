@@ -21,14 +21,14 @@ jobs:
         pwd
         ls
         cd .. && wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
-        tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* pkapi && ls -la && cd p4php7 && pwd
+        tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
         make clean
         phpize
         ./configure --with-perforce=../p4api
         make
         make test
-        
-        
+
+
 #    - name: make
 #      run: make
 #    - name: make check
