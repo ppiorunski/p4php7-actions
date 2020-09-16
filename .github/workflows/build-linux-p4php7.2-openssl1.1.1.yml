@@ -1,5 +1,5 @@
 name: Build P4Php for php 7.2 linux OpenSSL 1.1.1
-codeline: "r20.1"
+codeline: r20.1
 
 on:
   push:
