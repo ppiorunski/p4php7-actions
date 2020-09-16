@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Build P4Php for php 7.2 linux OpenSSL 1.1.1
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       run: |
         sudo apt-get update
         export DEBIAN_FRONTEND=noninteractive
-        sudo apt-get install -qq  php7.2-dev make build-essential dialog -apt-utils re2c
+        sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c
 #    - name: make
 #      run: make
 #    - name: make check
