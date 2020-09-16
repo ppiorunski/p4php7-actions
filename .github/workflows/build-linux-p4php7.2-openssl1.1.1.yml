@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: set-up-vm
+    - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
         sudo apt-get update
         export DEBIAN_FRONTEND=noninteractive
@@ -22,7 +22,6 @@ jobs:
         ls
         cd .. && wget ftp://ftp.perforce.com/perforce/r20.1/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
         tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && rm p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
-        make clean
         phpize
         ./configure --with-perforce=../p4api
         make
