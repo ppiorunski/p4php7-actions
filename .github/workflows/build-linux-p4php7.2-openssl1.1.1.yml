@@ -29,11 +29,8 @@ jobs:
         sudo apt-get update
         export DEBIAN_FRONTEND=noninteractive
         sudo apt-get install -qq  php7.2-dev make build-essential dialog apt-utils re2c wget
-        pwd
-        ls
         docker images
         docker pull ppiorunski/p4php7:php72-ubuntu18.04-ssl1.1.1
-        cat /etc/group
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl1.1.1.tgz
         tar -xvf p4api-glibc2.3-openssl1.1.1.tgz && rm p4api-glibc2.3-openssl1.1.1.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
         wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4 && chmod 775 p4
