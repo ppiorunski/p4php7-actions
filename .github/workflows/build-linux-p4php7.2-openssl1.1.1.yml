@@ -1,0 +1,26 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: set-up-vm
+      run: |
+        sudo apt-get update
+        export DEBIAN_FRONTEND=noninteractive
+        sudo apt-get install -qq  php7.2-dev make build-essential dialog -apt-utils re2c
+#    - name: make
+#      run: make
+#    - name: make check
+#      run: make check
+#    - name: make distcheck
+#      run: make distcheck
