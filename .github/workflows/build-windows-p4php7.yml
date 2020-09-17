@@ -3,11 +3,11 @@ name: Build P4Php for Windows
 env:
   codeline: "r20.1"
   docker: "ppiorunski/p4php7:server2019-vs2017"
-  phpMount: "${{ github.workspace }}:c:\\dependencies\\php"
+  phpMount: "${{ github.workspace }}\\..\\php-src:c:\\dependencies\\php"
   p4phpMount: "${{ github.workspace }}:c:\\dependencies\\p4php-source"
   p4apiMount: "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\p4api"
-  p4phpBinMount: ":c:\\p4php-bin"
-  phpSdkMount:  ":c:\\dependencies\\php-sdk-binary-tools"
+  p4phpBinMount: "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
+  phpSdkMount: "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\php-sdk-binary-tools"
   phpMinor: "7"
   phpMajor: "2"
   libname: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
@@ -37,31 +37,25 @@ jobs:
         Expand-Archive -Path ${{ github.workspace }}\..\p4api.zip ;  Move-Item -path ${{ github.workspace }}\..\p4api\*\* ${{ github.workspace }}\..\p4api\
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("https://codeload.github.com/php/php-src/zip/php-7.4.10","${{ github.workspace }}\..\php-src.zip")
         Expand-Archive -Path ${{ github.workspace }}\..\php-src.zip
-        dir
-        dir ..
         # as an alternative one could use below, might be quicker, and some of the github <-> github transfers are not billable :
         # cd ${{ github.workspace }}\.. ; git clone https://github.com/php/php-src.git ; cd php-src ; git checkout tags/php-7.4.10
         #cd .. ; mkdir php-src ; git clone  clone php/php-src
         cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0
+        mkdir ${{ github.workspace }}\..\p4-bin
         dir  ${{ github.workspace }}\..
         # note to self when dir is changed it stays that way between commands
-
-
-
-
 
     - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
         dir
-        cd
         docker pull $docker
         docker run \
-        -v %PHPSDKMOUNT% \
-        -v %PHPMOUNT% \
-        -v %P4PHPMOUNT% \
-        -v %P4APIMOUNT% \
-        -v %PHPOUTMOUNT% \
-        --env PHP_MINOR_VER --env arch --env TS=%%T  \
+        -v $Env:phpMount \
+        -v $Env:p4phpMount \
+        -v $Env:p4apiMount \
+        -v $Env:p4phpBinMount \
+        -v $Env:phpSdkMount \
+        --env PHP_MINOR_VER=2 --env arch=x64 --env TS=TS  \
         $docker
 
     - uses: actions/upload-artifact@v2
