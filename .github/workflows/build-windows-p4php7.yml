@@ -30,15 +30,13 @@ jobs:
     - name: Login to docker hub
       run: |
         echo $env:password| docker login --username $env:username --password-stdin
-        type C:\Users\runneradmin\.docker\config.json
-
     - name: Get p4api and p4 binary
       run: |
         Get-Host | Select-Object Version
-        Invoke-WebRequest -outfile  ..\p4api.zip -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip
-        cd .. ; Expand-Archive -Path p4api.zip ;  Move-Item -path .\p4api\*\* .\p4api\ ; cd p4php7
-        Invoke-WebRequest -outfile  p4.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4.exe
-        Invoke-WebRequest -outfile  p4d.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4d.exe
+        #Invoke-WebRequest -outfile  ..\p4api.zip -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip
+        #cd .. ; Expand-Archive -Path p4api.zip ;  Move-Item -path .\p4api\*\* .\p4api\ ; cd p4php7
+        #Invoke-WebRequest -outfile  p4.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4.exe
+        #Invoke-WebRequest -outfile  p4d.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4d.exe
 
 
 
