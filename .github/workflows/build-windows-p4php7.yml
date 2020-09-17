@@ -8,8 +8,8 @@ env:
   P4APIMOUNT: ":c:\\dependencies\\p4api"
   PHPOUTMOUNT: ":c:\\p4php-bin"
   PHPSDKMOUNT:  ":c:\\dependencies\\php-sdk-binary-tools"
-  PHP_MINOR_VER:  ""
-  PHP_MINOR_VER:  ""
+  PHP_MINOR_VER: ""
+  PHP_MAJOR_VER: ""
   LIBNAME: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
 
 on:
