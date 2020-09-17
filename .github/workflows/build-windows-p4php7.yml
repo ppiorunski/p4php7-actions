@@ -1,0 +1,54 @@
+name: Build P4Php for Windows
+
+env:
+  codeline: "r20.1"
+  docker: "ppiorunski/p4php7:server2019-vs2017"
+  PHPMOUNT: ":c:\\dependencies\\php"
+  P4PHPMOUNT: ":c:\\dependencies\\p4php-source"
+  P4APIMOUNT: ":c:\\dependencies\\p4api"
+  PHPOUTMOUNT: ":c:\\p4php-bin"
+  PHPSDKMOUNT:  ":c:\\dependencies\\php-sdk-binary-tools"
+  PHP_MINOR_VER:  ""
+  PHP_MINOR_VER:  ""
+  LIBNAME: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Login to docker hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Get p4api and p4 binary
+      run: |
+        dir
+        cd
+        docker pull $docker
+
+
+    - name: Build P4Php 7.2 Openssl 1.1.1
+      run: |
+        docker run \
+        -v %PHPSDKMOUNT% \
+        -v %PHPMOUNT% \
+        -v %P4PHPMOUNT% \
+        -v %P4APIMOUNT% \
+        -v %PHPOUTMOUNT% \
+        --env PHP_MINOR_VER --env arch --env TS=%%T  \
+        $docker
+
+    - uses: actions/upload-artifact@v2
+      with:
+        path: modules/perforce.so
