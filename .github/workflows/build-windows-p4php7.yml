@@ -13,7 +13,7 @@ env:
   LIBNAME: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
   username: ${{ secrets.DOCKERHUB_USERNAME }}
   password: ${{ secrets.DOCKERHUB_PASSWORD }}
-  test-password: ${{secrets.TEST}}
+  testPassword: ${{secrets.TEST}}
 
 on:
   push:
@@ -30,8 +30,8 @@ jobs:
 
     - name: Login to docker hub
       run: |
-        echo %test-password%
-        echo $env:test-password
+        echo %testpassword%
+        echo $env:testPassword
         echo %password%| docker login --username %username% --password-stdin
 
     - name: Get p4api and p4 binary
