@@ -3,9 +3,9 @@ name: Build P4Php for Windows
 env:
   codeline: "r20.1"
   docker: "ppiorunski/p4php7:server2019-vs2017"
-  phpMount: ":c:\\dependencies\\php"
-  p4phpMount: ":c:\\dependencies\\p4php-source"
-  p4apiMount: ":c:\\dependencies\\p4api"
+  phpMount: "$env:home\\:c:\\dependencies\\php"
+  p4phpMount: "${{ github.workspace }}:c:\\dependencies\\p4php-source"
+  p4apiMount: "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\p4api"
   p4phpBinMount: ":c:\\p4php-bin"
   phpSdkMount:  ":c:\\dependencies\\php-sdk-binary-tools"
   phpMinor: "7"
@@ -37,6 +37,7 @@ jobs:
         cd .. ; $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","d:\a\p4php7\p4api.zip") ; `
         Expand-Archive -Path p4api.zip ;  Move-Item -path p4api\*\* p4api\ ; cd p4php7
         dir
+        cd .. ; mkdir php-src ; gh repo clone php/php-src 
 
 
 
