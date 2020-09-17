@@ -33,17 +33,18 @@ jobs:
     - name: Get p4api and p4 binary
       run: |
         Get-Host | Select-Object Version
-        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","..\p4api.zip")
         dir
-        #Invoke-WebRequest -outfile  ..\p4api.zip -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip
-        cd .. ; Expand-Archive -Path p4api.zip ;  Move-Item -path .\p4api\*\* .\p4api\ ; cd p4php7
-        #Invoke-WebRequest -outfile  p4.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4.exe
-        #Invoke-WebRequest -outfile  p4d.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4d.exe
-
+        cd .. ; $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","p4api.zip")
+        dir
+        Expand-Archive -Path p4api.zip ;  Move-Item -path .\p4api\*\* .\p4api\ ; cd p4php7
+        dir
+        dir p4api
 
 
     - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
+        dir
+        cd
         docker pull $docker
         docker run \
         -v %PHPSDKMOUNT% \
