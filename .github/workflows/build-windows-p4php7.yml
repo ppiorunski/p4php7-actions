@@ -30,7 +30,8 @@ jobs:
     - name: Login to docker hub
       run: |
         echo $env:password| docker login --username $env:username --password-stdin
-
+        type C:\Users\runneradmin\.docker\config.json
+        
     - name: Get p4api and p4 binary
       run: |
         dir
