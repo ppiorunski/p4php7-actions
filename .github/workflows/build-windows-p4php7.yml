@@ -3,7 +3,7 @@ name: Build P4Php for Windows
 env:
   codeline: "r20.1"
   docker: "ppiorunski/p4php7:server2019-vs2017"
-  phpMount: "$env:home\\:c:\\dependencies\\php"
+  phpMount: "${{ github.workspace }}:c:\\dependencies\\php"
   p4phpMount: "${{ github.workspace }}:c:\\dependencies\\p4php-source"
   p4apiMount: "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\p4api"
   p4phpBinMount: ":c:\\p4php-bin"
@@ -32,12 +32,15 @@ jobs:
         echo $env:password| docker login --username $env:username --password-stdin
     - name: Get p4api and p4 binary
       run: |
-        echo $env:home
-        dir $env:home
-        cd .. ; $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","d:\a\p4php7\p4api.zip") ; `
-        Expand-Archive -Path p4api.zip ;  Move-Item -path p4api\*\* p4api\ ; cd p4php7
+        cd ..
+        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","${{ github.workspace }}\..\p4api.zip")
+        Expand-Archive -Path ${{ github.workspace }}\..\p4api.zip ;  Move-Item -path ${{ github.workspace }}\..\p4api\*\* ${{ github.workspace }}\..\p4api\
+        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("https://codeload.github.com/php/php-src/zip/php-7.4.10","${{ github.workspace }}\..\php-src.zip")
+        Expand-Archive -Path ${{ github.workspace }}\..\php-src.zip
         dir
-        cd .. ; mkdir php-src ; gh repo clone php/php-src 
+        dir ..
+
+        #cd .. ; mkdir php-src ; git clone  clone php/php-src
 
 
 
