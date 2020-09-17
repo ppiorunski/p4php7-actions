@@ -31,6 +31,7 @@ jobs:
     - name: Login to docker hub
       run: |
         echo %test-password%
+        echo $env:test-password
         echo %password%| docker login --username %username% --password-stdin
 
     - name: Get p4api and p4 binary
