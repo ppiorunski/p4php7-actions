@@ -12,7 +12,8 @@ env:
   PHP_MAJOR_VER: ""
   LIBNAME: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
   username: ${{ secrets.DOCKERHUB_USERNAME }}
-  password: ${{ secrets.DOCKERHUB_TOKEN }}
+  password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  test-password: ${{secrets.TEST}}
 
 on:
   push:
@@ -28,7 +29,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Login to docker hub
-      run: echo %password%| docker login --username %username% --password-stdin
+      run: |
+        echo %test-password%
+        echo %password%| docker login --username %username% --password-stdin
 
     - name: Get p4api and p4 binary
       run: |
