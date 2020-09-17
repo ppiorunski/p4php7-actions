@@ -44,6 +44,8 @@ jobs:
         #cd .. ; mkdir php-src ; git clone  clone php/php-src
         cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0
         dir  ${{ github.workspace }}\..
+        dir
+        dir ..
 
 
 
