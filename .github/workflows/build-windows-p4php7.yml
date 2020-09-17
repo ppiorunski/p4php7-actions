@@ -3,14 +3,14 @@ name: Build P4Php for Windows
 env:
   codeline: "r20.1"
   docker: "ppiorunski/p4php7:server2019-vs2017"
-  PHPMOUNT: ":c:\\dependencies\\php"
-  P4PHPMOUNT: ":c:\\dependencies\\p4php-source"
-  P4APIMOUNT: ":c:\\dependencies\\p4api"
-  PHPOUTMOUNT: ":c:\\p4php-bin"
-  PHPSDKMOUNT:  ":c:\\dependencies\\php-sdk-binary-tools"
-  PHP_MINOR_VER: ""
-  PHP_MAJOR_VER: ""
-  LIBNAME: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
+  phpMount: ":c:\\dependencies\\php"
+  p4phpMount: ":c:\\dependencies\\p4php-source"
+  p4apiMount: ":c:\\dependencies\\p4api"
+  p4phpBinMount: ":c:\\p4php-bin"
+  phpSdkMount:  ":c:\\dependencies\\php-sdk-binary-tools"
+  phpMinor: "7"
+  phpMajor: "2"
+  libname: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
   username: ${{ secrets.DOCKERHUB_USERNAME }}
   password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -31,16 +31,19 @@ jobs:
       run: |
         echo $env:password| docker login --username $env:username --password-stdin
         type C:\Users\runneradmin\.docker\config.json
-        
+
     - name: Get p4api and p4 binary
       run: |
-        dir
-        cd
-        docker pull $docker
+        Invoke-WebRequest -outfile  ..\p4api.zip -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip
+        cd .. ; Expand-Archive -Path p4api.zip ;  Move-Item -path .\p4api\*\* .\p4api\ ; cd p4php7
+        Invoke-WebRequest -outfile  p4.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4.exe
+        Invoke-WebRequest -outfile  p4d.exe -uri ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4d.exe
+
 
 
     - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
+        docker pull $docker
         docker run \
         -v %PHPSDKMOUNT% \
         -v %PHPMOUNT% \
