@@ -38,7 +38,7 @@ jobs:
         dir ; `
         Expand-Archive -Path p4api.zip ;  Move-Item -path p4api\*\* p4api\ ; cd p4php7
         dir
-        dir p4api
+
 
 
     - name: Build P4Php 7.2 Openssl 1.1.1
