@@ -47,10 +47,10 @@ jobs:
         ls `
         c:\
 
+    - name: Get docker image
+      run: docker pull $Env:docker
     - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
-        dir
-        docker pull $Env:docker
         docker run `
         -v $Env:phpMount `
         -v $Env:p4phpMount `
@@ -60,7 +60,7 @@ jobs:
         --env PHP_MINOR_VER=$Env:phpMinor --env arch=x64 --env TS=TS `
         $Env:docker
         dir
-
+        
     - uses: actions/upload-artifact@v2
       with:
         path: modules/perforce.so
