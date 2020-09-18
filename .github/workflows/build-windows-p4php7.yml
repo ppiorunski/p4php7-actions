@@ -44,19 +44,14 @@ jobs:
         mkdir ${{ github.workspace }}\..\p4-bin
         dir  ${{ github.workspace }}\..
         # note to self when dir is changed it stays that way between commands
+        ls `
+        c:\
 
     - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
         dir
         docker pull $Env:docker
-        docker run `
-        -v $Env:phpMount `
-        -v $Env:p4phpMount `
-        -v $Env:p4apiMount `
-        -v $Env:p4phpBinMount `
-        -v $Env:phpSdkMount `
-        --env $Env:phpMinor --env arch=x64 --env TS=TS `
-        $docker
+        docker run -v $Env:phpMount -v $Env:p4phpMount -v $Env:p4apiMount -v $Env:p4phpBinMount -v $Env:phpSdkMount --env $Env:phpMinor --env arch=x64 --env TS=TS $docker
         dir
 
     - uses: actions/upload-artifact@v2
