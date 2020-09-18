@@ -33,14 +33,17 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Get p4api and p4 binary
+    - name: Get p4api for Openssl {{ matrix.ssl }}
       run: |
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl{{ matrix.ssl }}.tgz
         tar -xvf p4api-glibc2.3-openssl{{ matrix.ssl }}.tgz && rm p4api-glibc2.3-openssl{{ matrix.ssl }}.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
+      
+    - name: Get p4 and p4d binary
+      run: |
         wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4 && chmod 775 p4
         wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4d && chmod 775 p4d
 
-    - name: Build P4Php 7.2 Openssl {{ matrix.ssl }}
+    - name: Build P4Php {{ matrix.php }} Openssl {{ matrix.ssl }}
       run: |
         docker pull ppiorunski/p4php7:php{{ matrix.php }}-ssl{{ matrix.ssl }}
         docker run -v $P4APIDIR:/p4/build/p4api -v $P4PHPDIR:/p4/build/p4-php7 ppiorunski/p4php7:php{{ matrix.php }}-ssl{{ matrix.ssl }}
