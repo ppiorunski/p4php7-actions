@@ -8,8 +8,8 @@ env:
   p4phpBinMount:  "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
   phpSdkMount:    "${{ github.workspace }}\\..\\php-sdk-binary-tools:c:\\dependencies\\php-sdk-binary-tools"
   p4phpMount:     "${{ github.workspace }}:c:\\dependencies\\p4php-source"
-  phpMinor: "7"
-  phpMajor: "2"
+  phpMinor: "2"
+  # phpMajor: "7" unused
   libname: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
   username: ${{ secrets.DOCKERHUB_USERNAME }}
   password: ${{ secrets.DOCKERHUB_TOKEN }}
