@@ -26,11 +26,6 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v2
-    - name: Move source to subdir
-      run: |
-        mkdir ${{ github.workspace }}\..\p4php-src
-        Move-Item ${{ github.workspace }}\..\p4php7\ ${{ github.workspace }}\..\p4php-src\
-        dir ${{ github.workspace }}\p4php-src
 
     - name: Login to docker hub
       run: |
@@ -56,7 +51,7 @@ jobs:
         dir p4php7
         dir  php-sdk-binary-tools
         dir php-src
-        dir p4php-src
+
 
     - name: Get docker image
       run: dir
