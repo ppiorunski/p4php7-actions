@@ -4,6 +4,7 @@ env:
   codeline: "r20.1"
   P4APIDIR: "/home/runner/work/p4php7/p4api"
   P4PHPDIR: "/home/runner/work/p4php7/p4php7"
+  tag:      "v1.1.0"
 
 
 on:
@@ -19,7 +20,22 @@ on:
 
 jobs:
     # Jobs run in paraller below is the name-id of job, in this case "build"
+  create_release:
+    runs-on: ubuntu-latest
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.0
+        release_name: Release v1.0.0
+        draft: false
+        prerelease: false
+
+
   build:
+    needs: create_release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -53,16 +69,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         path: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v1.0.0
-        release_name: Release v1.0.0
-        draft: false
-        prerelease: false
+
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
