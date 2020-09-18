@@ -21,8 +21,8 @@ on:
     types: [published]
 
 jobs:
-  needs: build
   create_release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Create release
