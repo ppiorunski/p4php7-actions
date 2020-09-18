@@ -1,6 +1,5 @@
 name: Build P4Php for Linux
 
-
 env:
   codeline: "r20.1"
   P4APIDIR: "/home/runner/work/p4php7/p4api"
@@ -22,7 +21,6 @@ on:
 
 jobs:
   create_release:
-    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Create release
@@ -31,30 +29,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.tag }}
+        tag_name: ${{ tag }}
         release_name: Release v1.1.1
         draft: false
         prerelease: false
-    - name: Download build artifacts
-      uses: actions/download-artifact@v2
-      with:
-          path: ${{ github.workspace }}
-    - name : List artifacts
-      run: ls
-      # Output of steps cannot be passed between jobs, a github sanctioned hack is to store it in the artifact
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ${{ github.workspace }}
-
 
     # Jobs run in paraller below is the name-id of job, in this case "build"
   build:
-
+    needs: create_release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -88,3 +70,14 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         path: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
+        asset_name: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
+        asset_content_type: application/zip
