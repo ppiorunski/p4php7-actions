@@ -14,10 +14,10 @@ on:
   workflow_dispatch:
   release:
     types: [published]
-  
+
 jobs:
     # Jobs run in paraller below is the name-id of job, in this case "build"
-    build:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
