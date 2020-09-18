@@ -15,8 +15,8 @@ env:
   password: ${{ secrets.DOCKERHUB_TOKEN }}
 
 on:
-  push:
-    branches: [ master ]
+  #push:
+  #  branches: [ master ]
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -60,7 +60,7 @@ jobs:
         --env PHP_MINOR_VER=$Env:phpMinor --env arch=x64 --env TS=TS `
         $Env:docker
         dir
-        
+
     - uses: actions/upload-artifact@v2
       with:
         path: modules/perforce.so
