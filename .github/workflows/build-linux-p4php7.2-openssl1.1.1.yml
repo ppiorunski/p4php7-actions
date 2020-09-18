@@ -6,7 +6,7 @@ env:
   P4APIDIR: "/home/runner/work/p4php7/p4api"
   P4PHPDIR: "/home/runner/work/p4php7/p4php7"
   sha:      ${{ github.sha }}
-  tag:      "v1.1.2"
+  tag:      "v1.1.${{ github.sha }}"
 
 
 on:
