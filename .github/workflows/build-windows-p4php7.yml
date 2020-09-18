@@ -32,7 +32,7 @@ jobs:
         echo $env:password| docker login ghcr.io --username $env:username --password-stdin
     - name: Get p4api and p4 binary
       run: |
-        cd ..
+        cd ..\
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","${{ github.workspace }}\..\p4api.zip")
         Expand-Archive -Path ${{ github.workspace }}\..\p4api.zip ;  Move-Item -path ${{ github.workspace }}\..\p4api\*\* ${{ github.workspace }}\..\p4api\
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("https://codeload.github.com/php/php-src/zip/php-7.4.10","${{ github.workspace }}\..\php-src.zip")
