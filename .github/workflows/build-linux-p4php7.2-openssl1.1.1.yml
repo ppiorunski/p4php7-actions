@@ -21,7 +21,7 @@ on:
     types: [published]
 
 jobs:
-  needs: create_release
+  needs: build
   create_release:
     runs-on: ubuntu-latest
     steps:
