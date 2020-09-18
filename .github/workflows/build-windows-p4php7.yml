@@ -55,8 +55,7 @@ jobs:
 
 
     - name: Get docker image
-      run: dir
-      #run: docker pull $Env:docker
+      run: docker pull $Env:docker
     - name: Build P4Php 7.2 Openssl 1.1.1
       run: |
         docker run `
