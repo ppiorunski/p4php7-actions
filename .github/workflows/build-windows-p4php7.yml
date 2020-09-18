@@ -40,7 +40,7 @@ jobs:
         # as an alternative one could use below, might be quicker, and some of the github <-> github transfers are not billable :
         # cd ${{ github.workspace }}\.. ; git clone https://github.com/php/php-src.git ; cd php-src ; git checkout tags/php-7.4.10
         #cd .. ; mkdir php-src ; git clone  clone php/php-src
-        cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0
+        cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0; cd ..
         mkdir ${{ github.workspace }}\..\p4-bin
         dir  ${{ github.workspace }}\..
         dir  ${{ github.workspace }}\..\..
