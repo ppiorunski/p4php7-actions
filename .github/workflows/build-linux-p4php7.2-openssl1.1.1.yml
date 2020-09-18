@@ -9,6 +9,9 @@ env:
 on:
   push:
     branches: [ master ]
+  push:
+    tags:
+    - 'v*'
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -47,8 +50,27 @@ jobs:
       run: |
         docker pull ppiorunski/p4php7:php${{ matrix.php }}-ssl${{ matrix.ssl }}
         docker run -v $P4APIDIR:/p4/build/p4api -v $P4PHPDIR:/p4/build/p4-php7 ppiorunski/p4php7:php${{ matrix.php }}-ssl${{ matrix.ssl }}
-
+        mv modules/perforce.so perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
     - uses: actions/upload-artifact@v2
       with:
-        name: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-        path: modules/perforce.so
+        path: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+      - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
+        asset_name: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
+        asset_content_type: application/zip
