@@ -2,7 +2,7 @@ name: Build P4Php for Windows
 
 env:
   codeline:       "r20.1"
-  docker:         "ppiorunski/p4php7:server2019-vs2017"
+  docker:         "ghcr.io/ppiorunski/server2019-vs2017-p4php"
   phpMount:       "${{ github.workspace }}\\..\\php-src:c:\\dependencies\\php"
   p4apiMount:     "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\p4api"
   p4phpBinMount:  "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
@@ -12,7 +12,7 @@ env:
   # phpMajor: "7" unused
   libname: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
   username: ${{ secrets.DOCKERHUB_USERNAME }}
-  password: ${{ secrets.DOCKERHUB_TOKEN }}
+  password: ${{ secrets.GITHUBREGISTRY_TOKEN }}
 
 on:
   #push:
@@ -29,7 +29,7 @@ jobs:
 
     - name: Login to docker hub
       run: |
-        echo $env:password| docker login --username $env:username --password-stdin
+        echo $env:password| docker login ghcr.io --username $env:username --password-stdin
     - name: Get p4api and p4 binary
       run: |
         cd ..
