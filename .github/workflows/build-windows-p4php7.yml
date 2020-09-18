@@ -57,6 +57,7 @@ jobs:
         -v $Env:phpSdkMount `
         --env $Env:phpMinor --env arch=x64 --env TS=TS `
         $docker
+        dir
 
     - uses: actions/upload-artifact@v2
       with:
