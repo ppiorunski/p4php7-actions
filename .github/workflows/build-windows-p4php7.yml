@@ -43,6 +43,7 @@ jobs:
         cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0
         mkdir ${{ github.workspace }}\..\p4-bin
         dir  ${{ github.workspace }}\..
+        dir  ${{ github.workspace }}\..\..
         # note to self when dir is changed it stays that way between commands
         dir
         dir p4-bin
