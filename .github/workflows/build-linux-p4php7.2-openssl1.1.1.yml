@@ -21,7 +21,7 @@ on:
     types: [published]
 
 jobs:
-  needs: create_release  
+  needs: create_release
   create_release:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +35,12 @@ jobs:
         release_name: Release v1.1.1
         draft: false
         prerelease: false
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+          name: *
+    - name : List artifacts
+      run: ls
       # Output of steps cannot be passed between jobs, a github sanctioned hack is to store it in the artifact
     - name: Upload Release Asset
       id: upload-release-asset
