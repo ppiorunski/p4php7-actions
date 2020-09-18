@@ -57,7 +57,7 @@ jobs:
         -v $Env:p4apiMount `
         -v $Env:p4phpBinMount `
         -v $Env:phpSdkMount `
-        --env $Env:phpMinor --env arch=x64 --env TS=TS `
+        --env PHP_MINOR_VER=$Env:phpMinor --env arch=x64 --env TS=TS `
         $Env:docker
         dir
 
