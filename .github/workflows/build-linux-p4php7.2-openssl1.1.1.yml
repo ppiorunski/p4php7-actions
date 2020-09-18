@@ -14,9 +14,7 @@ on:
   workflow_dispatch:
   release:
     types: [published]
-  schedule:
-    -cron: '* * 8 * *'
-
+  
 jobs:
     # Jobs run in paraller below is the name-id of job, in this case "build"
     build:
