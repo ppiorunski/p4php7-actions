@@ -1,10 +1,10 @@
-name: Build P4Php for php 7.2 linux OpenSSL 1.1.1
+name: Build P4Php for Linux
 
 env:
   codeline: "r20.1"
   P4APIDIR: "/home/runner/work/p4php7/p4api"
   P4PHPDIR: "/home/runner/work/p4php7/p4php7"
-  docker: ppiorunski/p4php7:php72-ubuntu18.04-ssl1.1.1
+
 
 on:
   push:
@@ -43,11 +43,9 @@ jobs:
         wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4d && chmod 775 p4d
 
     - name: Build P4Php 7.2 Openssl {{ matrix.ssl }}
-    env:
-      docker: ppiorunski/p4php7:php{{ matrix.php }}-ssl{{ matrix.ssl }}
       run: |
-        docker pull $docker
-        docker run -v $P4APIDIR:/p4/build/p4api -v $P4PHPDIR:/p4/build/p4-php7 $docker
+        docker pull ppiorunski/p4php7:php{{ matrix.php }}-ssl{{ matrix.ssl }}
+        docker run -v $P4APIDIR:/p4/build/p4api -v $P4PHPDIR:/p4/build/p4-php7 ppiorunski/p4php7:php{{ matrix.php }}-ssl{{ matrix.ssl }}
 
     - uses: actions/upload-artifact@v2
       with:
