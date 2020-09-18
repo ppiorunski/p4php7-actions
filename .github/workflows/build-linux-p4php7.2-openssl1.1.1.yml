@@ -1,10 +1,9 @@
 name: Build P4Php for Linux
-
+tag:      "v1.1.2"
 env:
   codeline: "r20.1"
   P4APIDIR: "/home/runner/work/p4php7/p4api"
   P4PHPDIR: "/home/runner/work/p4php7/p4php7"
-  tag:      "v1.1.2"
   sha:      ${{ github.sha }}
 
 
