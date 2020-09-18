@@ -19,10 +19,8 @@ on:
     types: [published]
 
 jobs:
-    # Jobs run in paraller below is the name-id of job, in this case "build"
   create_release:
-    runs-on: ubuntu-latest
-    - name: Create release
+    runs-on: ubuntu-latest    
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -33,7 +31,7 @@ jobs:
         draft: false
         prerelease: false
 
-
+    # Jobs run in paraller below is the name-id of job, in this case "build"
   build:
     needs: create_release
     runs-on: ubuntu-latest
