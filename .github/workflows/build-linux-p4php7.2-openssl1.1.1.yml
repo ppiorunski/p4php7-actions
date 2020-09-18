@@ -21,6 +21,7 @@ on:
     types: [published]
 
 jobs:
+  needs: create_release  
   create_release:
     runs-on: ubuntu-latest
     steps:
@@ -35,15 +36,19 @@ jobs:
         draft: false
         prerelease: false
       # Output of steps cannot be passed between jobs, a github sanctioned hack is to store it in the artifact
-    - name: Store Url
-      run: echo ${{ steps.create_release.outputs.upload_url }} > url
-    - uses: actions/upload-artifact@v2
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: url
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: *
+
 
     # Jobs run in paraller below is the name-id of job, in this case "build"
   build:
-    needs: create_release
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -77,22 +82,3 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         path: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-
-    - name: Get Release Url
-      uses: actions/download-artifact@v2
-      with:
-        name: url
-    -name: Store Url
-      run: cat url > ${{ env.url }}
-
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-
-        upload_url: ${{ env.url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-        asset_name: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-        asset_content_type: application/zip
