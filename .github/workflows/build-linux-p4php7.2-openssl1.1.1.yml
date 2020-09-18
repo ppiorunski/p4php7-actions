@@ -34,6 +34,7 @@ jobs:
         release_name: Release v1.1.1
         draft: false
         prerelease: false
+      # Output of steps cannot be passed between jobs, a github sanctioned hack is to store it in the artifact
     - name: Store Url
       run: echo ${{ steps.create_release.outputs.upload_url }} > url
     - uses: actions/upload-artifact@v2
@@ -81,8 +82,9 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: url
+    -name: Store Url
       run: cat url > ${{ env.url }}
-      
+
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
