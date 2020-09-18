@@ -12,9 +12,19 @@ on:
   pull_request:
     branches: [ master ]
   workflow_dispatch:
+  release:
+    types: [published]
+  schedule:
+    -cron: '* * 8 * *'
+
 jobs:
-  build:
+    # Jobs run in paraller below is the name-id of job, in this case "build"
+    build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ssl: [1.1.1, 1.0.2]
+        php: [70, 71, 72, 73, 74]
     steps:
     - name: Checkout source code
       uses: actions/checkout@v2
