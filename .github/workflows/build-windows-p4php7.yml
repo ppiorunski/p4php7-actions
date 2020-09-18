@@ -49,13 +49,13 @@ jobs:
       run: |
         dir
         docker pull $docker
-        docker run \
-        -v $Env:phpMount \
-        -v $Env:p4phpMount \
-        -v $Env:p4apiMount \
-        -v $Env:p4phpBinMount \
-        -v $Env:phpSdkMount \
-        --env PHP_MINOR_VER=2 --env arch=x64 --env TS=TS  \
+        docker run `
+        -v $Env:phpMount `
+        -v $Env:p4phpMount `
+        -v $Env:p4apiMount `
+        -v $Env:p4phpBinMount `
+        -v $Env:phpSdkMount `
+        --env PHP_MINOR_VER=2 --env arch=x64 --env TS=TS `
         $docker
 
     - uses: actions/upload-artifact@v2
