@@ -28,9 +28,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Move source to subdir
       run: |
-        mkdir p4php-src
-        Move-Item .\p4php7\ .\p4php-src\
-        dir p4php-src
+        mkdir ${{ github.workspace }}\p4php-src
+        Move-Item ${{ github.workspace }}\p4php7\ ${{ github.workspace }}\p4php-src\
+        dir ${{ github.workspace }}\p4php-src
 
     - name: Login to docker hub
       run: |
