@@ -38,7 +38,7 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v2
       with:
-          name: *
+          path: *
     - name : List artifacts
       run: ls
       # Output of steps cannot be passed between jobs, a github sanctioned hack is to store it in the artifact
