@@ -36,7 +36,7 @@ jobs:
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","${{ github.workspace }}\..\p4api.zip")
         Expand-Archive -Path ${{ github.workspace }}\..\p4api.zip ;  Move-Item -path ${{ github.workspace }}\..\p4api\*\* ${{ github.workspace }}\..\p4api\
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("https://codeload.github.com/php/php-src/zip/php-7.4.10","${{ github.workspace }}\..\php-src.zip")
-        Expand-Archive -Path ${{ github.workspace }}\..\php-src.zip
+        Expand-Archive -Path ${{ github.workspace }}\..\php-src.zip ;  Move-Item -path ${{ github.workspace }}\..\php-src\*\* ${{ github.workspace }}\..\php-src\
         # as an alternative one could use below, might be quicker, and some of the github <-> github transfers are not billable :
         # cd ${{ github.workspace }}\.. ; git clone https://github.com/php/php-src.git ; cd php-src ; git checkout tags/php-7.4.10
         #cd .. ; mkdir php-src ; git clone  clone php/php-src
