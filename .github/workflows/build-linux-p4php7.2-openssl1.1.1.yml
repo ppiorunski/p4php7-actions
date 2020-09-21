@@ -109,10 +109,8 @@ jobs:
         path: p4php/
 
     - name: Login to docker hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      run: |
+        echo $env:password| docker login --username $env:username --password-stdin
 
     - name: Get p4api and p4 binary
       run: |
