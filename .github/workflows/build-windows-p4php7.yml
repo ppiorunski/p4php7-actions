@@ -42,15 +42,15 @@ jobs:
         cd ..\
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.nt${{ matrix.arch }}/p4api_vs2017_dyn_openssl1.1.1.zip","${{ github.workspace }}\..\p4api.zip")
         Expand-Archive -Path ${{ github.workspace }}\..\p4api.zip ;  Move-Item -path ${{ github.workspace }}\..\p4api\*\* ${{ github.workspace }}\..\p4api\
-        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.nt${{ matrix.arch }}/p4.exe","${{ github.workspace }}\p4php\p4.exe")
-        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.nt${{ matrix.arch }}/p4d.exe","${{ github.workspace }}\p4php\p4d.exe")
 
+        # 2 ways to get the php src - git clone and sync @tag, or download from website.
         #$WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("https://codeload.github.com/php/php-src/zip/php-7.4.10","${{ github.workspace }}\..\php-src.zip")
         #Expand-Archive -Path ${{ github.workspace }}\..\php-src.zip ;  Move-Item -path ${{ github.workspace }}\..\php-src\*\* ${{ github.workspace }}\..\php-src\
 
-        # as an alternative one could use below, might be quicker, and some of the github <-> github transfers are not billable :
-
         cd ${{ github.workspace }}\.. ; git clone https://github.com/php/php-src.git ; cd php-src ; git checkout tags/php-7.${{ matrix.phpMinor }}.10
+        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.nt${{ matrix.arch }}/p4.exe","${{ github.workspace }}\..\php-src\p4.exe")
+        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.nt${{ matrix.arch }}/p4d.exe","${{ github.workspace }}\..\php-src\p4d.exe")
+
         cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0
         cd ${{ github.workspace }}\..
 
@@ -81,7 +81,7 @@ jobs:
         --env PHP_MINOR_VER=${{ matrix.phpMinor }} --env arch=${{ matrix.arch }} --env TS=${{ matrix.TS }} `
         $Env:docker
         dir ${{ github.workspace }}\..\p4-bin
-        move ${{ github.workspace }}\..\p4-bin\bin.nt${{ matrix.arch }}\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
+        move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
 
 
     - uses: actions/upload-artifact@v2
