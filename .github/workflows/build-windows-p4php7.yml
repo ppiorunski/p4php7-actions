@@ -7,7 +7,7 @@ env:
   p4apiMount:     "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\p4api"
   p4phpBinMount:  "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
   phpSdkMount:    "${{ github.workspace }}\\..\\php-sdk-binary-tools:c:\\dependencies\\php-sdk-binary-tools"
-  p4phpMount:     "${{ github.workspace }}:c:\\dependencies\\p4php-source"
+  p4phpMount:     "${{ github.workspace }}\\p4php7:c:\\dependencies\\p4php-source"
   phpMinor: "2"
   # phpMajor: "7" unused
   libname: "p4-bin\\%bin%\\perforce_php7%PHP_MINOR_VER%"
@@ -26,6 +26,8 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v2
+      with:
+        path: p4php/
 
     - name: Login to docker hub
       run: |
@@ -50,6 +52,7 @@ jobs:
         dir p4api
         dir p4-bin
         dir p4php7
+        dir p4php7/p4php
         dir  php-sdk-binary-tools
         dir php-src
 
