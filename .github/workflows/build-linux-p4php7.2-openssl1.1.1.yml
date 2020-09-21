@@ -178,7 +178,9 @@ jobs:
         name: artifact.zip
 
     - name: Unzip Artifacts
-      run: unzip artifact.zip
+      run: |
+        unzip artifact.zip
+        ls
 
     - name: Upload Release Asset
       id: upload-release-asset
