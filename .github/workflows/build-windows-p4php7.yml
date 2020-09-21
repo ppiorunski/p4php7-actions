@@ -81,9 +81,9 @@ jobs:
         --env PHP_MINOR_VER=${{ matrix.phpMinor }} --env arch=${{ matrix.arch }} --env TS=${{ matrix.TS }} `
         $Env:docker
         dir ${{ github.workspace }}\..\p4-bin
-        move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
+        move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
 
 
     - uses: actions/upload-artifact@v2
       with:
-        path: ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}
+        path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}
