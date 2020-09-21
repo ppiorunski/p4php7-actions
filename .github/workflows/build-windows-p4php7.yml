@@ -86,4 +86,4 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}
+        path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
