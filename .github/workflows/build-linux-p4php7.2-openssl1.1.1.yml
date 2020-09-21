@@ -3,7 +3,7 @@ name: Build P4Php for Linux
 env:
   codeline:       "r20.1"
   P4APIDIR:       "/home/runner/work/p4php7/p4api"
-  P4PHPDIR:       "/home/runner/work/p4php7/p4php7"  
+  P4PHPDIR:       "/home/runner/work/p4php7/p4php7"
   tag:            "v1.1.${{ github.sha }}"
   docker:         "ppiorunski/p4php7:server2019-vs2017"
   #docker:         "ghcr.io/ppiorunski/server2019-vs2017-p4php"
@@ -166,8 +166,7 @@ jobs:
         path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
 
   upload-windows:
-    needs: create_release
-    needs: build-windows
+    needs: [ create_release, build-windows ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
