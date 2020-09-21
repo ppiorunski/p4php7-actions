@@ -52,6 +52,7 @@ jobs:
 
         cd ${{ github.workspace }}\.. ; git clone https://github.com/php/php-src.git ; cd php-src ; git checkout tags/php-7.${{ matrix.phpMinor }}.10
         cd ${{ github.workspace }}\.. ; git clone  https://github.com/microsoft/php-sdk-binary-tools.git ; cd php-sdk-binary-tools ;git checkout tags/php-sdk-2.2.0
+        cd ${{ github.workspace }}\..
         
         mkdir ${{ github.workspace }}\..\p4-bin
         dir  ${{ github.workspace }}\..
