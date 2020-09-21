@@ -176,6 +176,7 @@ jobs:
         TS: [TS, NTS]
         phpMinor: [2, 3, 4]
         arch: [x86, x64]
+    steps:
     - uses: actions/download-artifact@v2
       with:
         name: perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
