@@ -175,8 +175,8 @@ jobs:
     steps:
     - uses: actions/download-artifact@v2
       with:
-        name: perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
-
+        name: artifact.zip
+      run: unzip artifact.zip
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
