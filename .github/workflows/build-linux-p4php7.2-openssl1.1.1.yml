@@ -1,4 +1,4 @@
-name: Build P4Php for Linux
+name: Build P4Php
 
 env:
   codeline:       "r20.1"
@@ -12,6 +12,8 @@ env:
   p4phpBinMount:  "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
   phpSdkMount:    "${{ github.workspace }}\\..\\php-sdk-binary-tools:c:\\dependencies\\php-sdk-binary-tools"
   p4phpMount:     "${{ github.workspace }}:c:\\dependencies\\p4php-source"
+  username: ${{ secrets.DOCKERHUB_USERNAME }}
+  password: ${{ secrets.GITHUBREGISTRY_TOKEN }}
 
 
 on:
