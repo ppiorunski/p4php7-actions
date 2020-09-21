@@ -1,12 +1,10 @@
 name: Build P4Php for Linux
 
 env:
-  codeline: "r20.1"
-  P4APIDIR: "/home/runner/work/p4php7/p4api"
-  P4PHPDIR: "/home/runner/work/p4php7/p4php7"
-  sha:      ${{ github.sha }}
-  tag:      "v1.1.${{ github.sha }}"
   codeline:       "r20.1"
+  P4APIDIR:       "/home/runner/work/p4php7/p4api"
+  P4PHPDIR:       "/home/runner/work/p4php7/p4php7"  
+  tag:            "v1.1.${{ github.sha }}"
   docker:         "ppiorunski/p4php7:server2019-vs2017"
   #docker:         "ghcr.io/ppiorunski/server2019-vs2017-p4php"
   phpMount:       "${{ github.workspace }}\\..\\php-src:c:\\dependencies\\php"
