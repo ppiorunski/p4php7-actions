@@ -12,7 +12,7 @@ env:
   p4phpBinMount:  "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
   phpSdkMount:    "${{ github.workspace }}\\..\\php-sdk-binary-tools:c:\\dependencies\\php-sdk-binary-tools"
   p4phpMount:     "${{ github.workspace }}:c:\\dependencies\\p4php-source"
-  username:       ${{ secrets.DOCKERHUB_USERNAME }}
+  username:       "ppiorunski"
   password:       ${{ secrets.DOCKERHUB_TOKEN }}
 
 
