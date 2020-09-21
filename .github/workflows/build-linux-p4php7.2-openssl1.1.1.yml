@@ -98,6 +98,7 @@ jobs:
 
   build-windows:
     runs-on: windows-2019
+    needs: create_release
     strategy:
       matrix:
         TS: [TS, NTS]
@@ -163,25 +164,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
-
-  upload-windows:
-    needs: [ create_release, build-windows ]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        TS: [TS, NTS]
-        phpMinor: [2, 3, 4]
-        arch: [x86, x64]
-    steps:
-    - uses: actions/download-artifact@v2
-      with:
-        name: artifact.zip
-
-    - name: Unzip Artifacts
-      run: |
-        unzip artifact.zip
-        ls
-
+        
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -189,6 +172,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
+        asset_path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
         asset_name: perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
         asset_content_type: application/zip
