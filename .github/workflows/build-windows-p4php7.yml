@@ -37,6 +37,8 @@ jobs:
         cd ..\
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4api_vs2017_dyn_openssl1.1.1.zip","${{ github.workspace }}\..\p4api.zip")
         Expand-Archive -Path ${{ github.workspace }}\..\p4api.zip ;  Move-Item -path ${{ github.workspace }}\..\p4api\*\* ${{ github.workspace }}\..\p4api\
+        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4.exe","${{ github.workspace }}\p4php\p4.exe")
+        $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("ftp://ftp.perforce.com/perforce/$env:codeline/bin.ntx64/p4d.exe","${{ github.workspace }}\p4php\p4d.exe")
         $WebClient = New-Object System.Net.WebClient ; $WebClient.DownloadFile("https://codeload.github.com/php/php-src/zip/php-7.4.10","${{ github.workspace }}\..\php-src.zip")
         Expand-Archive -Path ${{ github.workspace }}\..\php-src.zip ;  Move-Item -path ${{ github.workspace }}\..\php-src\*\* ${{ github.workspace }}\..\php-src\
         # as an alternative one could use below, might be quicker, and some of the github <-> github transfers are not billable :
