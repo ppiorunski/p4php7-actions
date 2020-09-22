@@ -2,50 +2,35 @@ name: Build P4Php
 
 env:
   codeline:       "r20.1"
+
+  # Password for login to dockerhub to get the images.
+  password:       ${{ secrets.DOCKERHUB_TOKEN }}
+
+  # Linux build variables:
   P4APIDIR:       "/home/runner/work/p4php7/p4api"
   P4PHPDIR:       "/home/runner/work/p4php7/p4php7"
-  tag:            "v1.1.${{ github.sha }}"
+
+  # Windows build variables:
   docker:         "ppiorunski/p4php7:server2019-vs2017"
-  #docker:         "ghcr.io/ppiorunski/server2019-vs2017-p4php"
   phpMount:       "${{ github.workspace }}\\..\\php-src:c:\\dependencies\\php"
   p4apiMount:     "${{ github.workspace }}\\..\\p4api:c:\\dependencies\\p4api"
   p4phpBinMount:  "${{ github.workspace }}\\..\\p4-bin:c:\\p4php-bin"
   phpSdkMount:    "${{ github.workspace }}\\..\\php-sdk-binary-tools:c:\\dependencies\\php-sdk-binary-tools"
   p4phpMount:     "${{ github.workspace }}:c:\\dependencies\\p4php-source"
-  password:       ${{ secrets.DOCKERHUB_TOKEN }}
+
 
 
 on:
   push:
     branches: [ master ]
-    tags:
-    - 'v*'
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-  release:
-    types: [published]
 
 jobs:
-  create_release:
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.tag }}
-        release_name: Release v1.1.1
-        draft: false
-        prerelease: false
 
     # Jobs run in paraller below is the name-id of job, in this case "build"
   build-linux:
-    needs: create_release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -84,21 +69,8 @@ jobs:
       with:
         path: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
 
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ./perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-        asset_name: perforce_php${{ matrix.php }}-ssl${{ matrix.ssl }}.so
-        asset_content_type: application/zip
-
-
   build-windows:
     runs-on: windows-2019
-    needs: create_release
     strategy:
       matrix:
         TS: [TS, NTS]
@@ -132,17 +104,7 @@ jobs:
         cd ${{ github.workspace }}\..
 
         mkdir ${{ github.workspace }}\..\p4-bin
-        dir  ${{ github.workspace }}\..
-        dir  ${{ github.workspace }}\..\..
         # note to self when dir is changed it stays that way between commands
-        dir
-        dir p4-bin
-        dir p4api
-        dir p4-bin
-        dir p4php7
-        dir p4php7/p4php
-        dir  php-sdk-binary-tools
-        dir php-src
 
 
     - name: Get docker image
@@ -157,21 +119,9 @@ jobs:
         -v $Env:phpSdkMount `
         --env PHP_MINOR_VER=${{ matrix.phpMinor }} --env arch=${{ matrix.arch }} --env TS=${{ matrix.TS }} `
         $Env:docker
-        dir ${{ github.workspace }}\..\p4-bin
         move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
 
 
     - uses: actions/upload-artifact@v2
       with:
         path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
-        
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
-        asset_name: perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
-        asset_content_type: application/zip
