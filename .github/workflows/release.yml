@@ -2,7 +2,7 @@ name: Release P4Php
 
 env:
   tag:        "2020.1"
-  minorTag:   "0"
+  minorTag:   "1"
 
 on:
   workflow_dispatch:
