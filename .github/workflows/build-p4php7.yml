@@ -45,7 +45,7 @@ jobs:
         dir
         pwd
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz
-        tar -xvf p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && rm p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
+        tar -xvf p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && rm p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && mv p4api* p4api && ls -la && cd ${{ github.workspace }} && pwd
 
     - name: Get p4 and p4d binary
       run: |
