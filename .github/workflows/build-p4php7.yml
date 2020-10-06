@@ -42,6 +42,7 @@ jobs:
 
     - name: Get p4api for Openssl ${{ matrix.ssl }}
       run: |
+        dir
         cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz
         tar -xvf p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && rm p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && mv p4api* p4api && ls -la && cd p4php7 && pwd
 
