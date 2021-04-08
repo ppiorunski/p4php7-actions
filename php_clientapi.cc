@@ -30,6 +30,9 @@
 #include "i18napi.h"
 #include "strtable.h"
 
+#include "errorlog.h"
+#include "debug.h"
+
 #include "undefdups.h"
 
 extern "C"
@@ -75,6 +78,9 @@ PHPClientAPI::PHPClientAPI() : ui( &specMgr )
     maxScanRows = 0;
     maxLockTime = 0;
 
+    p4debugHelper = 0;
+    reportLog = 0;
+
     // Enable form parsing, streams and set tagged mode on by default
     mode = M_PARSE_FORMS | M_TAGGED | M_STREAMS;
     client.SetProtocol( "specstring", "" );
@@ -119,6 +125,9 @@ PHPClientAPI::~PHPClientAPI()
     }
 
     delete enviro;
+
+    delete p4debugHelper;
+    delete reportLog;
 }
 
 //
@@ -1010,5 +1019,24 @@ PHPClientAPI::Except( const char *func, const char *msg )
 
     zend_throw_exception_ex( get_p4_exception_ce(),
         0 TSRMLS_CC, m.Text() );
+}
+
+//
+// Set up the logging
+//
+
+void
+PHPClientAPI::SetTrace( const char *file, const char *level )
+{
+    if( !p4debugHelper )
+        p4debugHelper = new P4DebugConfig();
+    if( !reportLog )
+        reportLog = new ErrorLog();
+
+    reportLog->SetLog( file );
+    p4debugHelper->Install();
+    p4debugHelper->SetErrorLog( reportLog );
+
+    p4debug.SetLevel( level );
 }
 

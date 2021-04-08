@@ -42,7 +42,9 @@ zend_class_entry *p4_mergedata_ce;
 static zend_object_handlers p4_mergedata_object_handlers;
 
 ZEND_BEGIN_ARG_INFO(__p4_mergedata_get_args, 0)
-    ZEND_ARG_PASS_INFO(0)
+    ZEND_ARG_INFO(0,property)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_no_args, 0)
 ZEND_END_ARG_INFO()
 
 /* Client API Properties */
@@ -61,9 +63,9 @@ static merge_property_t p4_properties[] = {
 
 /* P4_MergeData Class Methods */
 static zend_function_entry perforce_p4_mergedata_functions[] = {
-    PHP_ME(P4_MergeData, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(P4_MergeData, __construct, __p4_no_args, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(P4_MergeData, __get, __p4_mergedata_get_args, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_MergeData, run_merge,   NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_MergeData, run_merge,   __p4_no_args, ZEND_ACC_PUBLIC)
     { NULL, NULL, NULL }
 };
 
@@ -179,7 +181,11 @@ PHP_METHOD(P4_MergeData, __get)
      * php class behaviour, could be an undeclared field set at runtime. */
     if (!found) {
 	zval rv;
+      #if (PHP_VERSION_ID < 80000) 
         return_value = zend_read_property(p4_mergedata_ce, getThis(), name, sizeof(name) - 1, 0, &rv);
+      #else
+        return_value = zend_read_property(p4_mergedata_ce, Z_OBJ_P(getThis()), name, sizeof(name) - 1, 0, &rv);
+      #endif
     }
 }
 /* }}} */

@@ -171,7 +171,7 @@ array(2) {
 object(stdClass)#2 (0) {
 }
 
-Notice: Undefined property:%w P4::$%s in %s001.php on line %d
+%s: Undefined property:%w P4::$%s in %s001.php on line %d
 NULL
 string(5) "Hello"
 int(1)

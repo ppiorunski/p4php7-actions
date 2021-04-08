@@ -31,7 +31,7 @@ extern "C"
 {
     #include "php.h"
 }
-
+#include "php_macros.h"
 #include "php_perforce.h"
 
 #include "php_p4_exception.h"

@@ -219,16 +219,16 @@ struct defaultspec {
     },
     {
     "repo",
-    "Repo;code:1001;rq;ro;len:128;;"
-    "Owner;code:1002;len:32;;"
+	"Repo;code:1001;rq;ro;fmt:L;len:128;;"
+	"Owner;code:1002;fmt:R;len:32;;"
     "Created;code:1003;type:date;ro;fmt:L;len:20;;"
-    "Pushed;code:1004;type:date;ro;fmt:L;len:20;;"
-    "ForkedFrom;code:1005;ro;len:128;;"
+	"Pushed;code:1004;type:date;ro;fmt:R;len:20;;"
+	"ForkedFrom;code:1005;ro;fmt:L;len:128;;"
     "Description;code:1006;type:text;len:128;;"
-    "DefaultBranch;code:1007;len:32;;"
-    "MirroredFrom;code:1008;len:32;;"
+	"DefaultBranch;code:1007;fmt:L;len:32;;"
+	"MirroredFrom;code:1008;fmt:R;len:32;;"
     "Options;code:1009;type:select;len:10;val:lfs/nolfs;;"
-    "GconnMirrorServerId;code:1010;len:32;;"
+	"GconnMirrorServerId;code:1010;fmt:L;len:32;;"
     },
     {
 	"server",
@@ -275,6 +275,8 @@ struct defaultspec {
 	"allsubmit/ownersubmit,unlocked/locked,"
 	"toparent/notoparent,fromparent/nofromparent,"
     "mergedown/mergeany;open:isolate;;"
+	"ParentView;code:NNN;rq;open:isolate;"
+	"pre:inherit;val:noinherit/inherit;;"
 	"Paths;code:710;rq;type:wlist;words:2;maxwords:3;len:64;open:propagate;fmt:C;;"
 	"Remapped;code:711;type:wlist;words:2;len:64;open:propagate;fmt:C;;"
 	"Ignored;code:712;type:wlist;words:1;len:64;open:propagate;fmt:C;;"
@@ -744,7 +746,11 @@ SpecMgr::InsertItem( zval *hash, const StrPtr *var, const StrPtr *val )
 
         if ( levelValue >= zend_hash_num_elements( Z_ARRVAL( ary ) ) ) {
             for (int i = zend_hash_num_elements( Z_ARRVAL( ary ) ); i < levelValue; i++) {
+                #if PHP_VERSION_ID < 70300
+                    add_index_unset( &ary, i );
+                #else
                 add_index_null( &ary, i );
+                #endif
             }
             array_init( &tlist );
             add_next_index_zval( &ary, &tlist );

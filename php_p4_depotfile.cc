@@ -31,6 +31,7 @@ extern "C"
 {
     #include "php.h"
 }
+#include "php_macros.h"
 #include "php_perforce.h"
 
 #include "php_p4_depotfile.h"
@@ -38,9 +39,12 @@ extern "C"
 
 zend_class_entry *p4_depotfile_ce;
 
+ZEND_BEGIN_ARG_INFO(__p4_no_args, 0)
+ZEND_END_ARG_INFO()
+
 /* P4_DepotFile Class Methods */
 static zend_function_entry perforce_p4_depotfile_functions[] = {
-    PHP_ME(P4_DepotFile, __construct,  NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(P4_DepotFile, __construct,  __p4_no_args, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     { NULL, NULL, NULL }
 };
 
@@ -69,6 +73,10 @@ PHP_METHOD(P4_DepotFile, __construct)
 {
     zval revisions;
     array_init(&revisions);
-    zend_update_property(p4_depotfile_ce, getThis(), ZEND_STRS("revisions") - 1, &revisions TSRMLS_CC);
+    #if (PHP_VERSION_ID < 80000)
+      zend_update_property(p4_depotfile_ce, getThis(), ZEND_STRS("revisions") - 1, &revisions TSRMLS_CC);
+    #else
+      zend_update_property(p4_depotfile_ce, Z_OBJ_P(getThis()), ZEND_STRS("revisions") - 1, &revisions TSRMLS_CC);
+    #endif
     zval_ptr_dtor(&revisions);
 }

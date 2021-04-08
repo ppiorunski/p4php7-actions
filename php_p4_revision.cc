@@ -31,15 +31,18 @@ extern "C"
 {
     #include "php.h"
 }
-
+#include "php_macros.h"
 #include "php_perforce.h"
 #include "php_p4_revision.h"
 
 zend_class_entry *p4_revision_ce;
 
+ZEND_BEGIN_ARG_INFO(__p4_no_args, 0)
+ZEND_END_ARG_INFO()
+
 /* P4_Revision Class Methods */
 static zend_function_entry perforce_p4_revision_functions[] = {
-    PHP_ME(P4_Revision, __construct,  NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(P4_Revision, __construct,  __p4_no_args, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     { NULL, NULL, NULL }
 };
 
@@ -92,7 +95,11 @@ PHP_METHOD(P4_Revision, __construct)
 {
     zval integrations;
     array_init(&integrations);
-    zend_update_property(p4_revision_ce, getThis(), ZEND_STRS("integrations") - 1,
+    #if (PHP_VERSION_ID < 80000)
+      zend_update_property(p4_revision_ce, getThis(), ZEND_STRS("integrations") - 1,
+    #else
+    zend_update_property(p4_revision_ce, Z_OBJ_P(getThis()), ZEND_STRS("integrations") - 1,
+    #endif
         &integrations TSRMLS_CC);
     // Z_TRY_DELREF(integrations);
     // zval_dtor(&integrations);

@@ -39,25 +39,29 @@ extern "C"
 zend_class_entry *p4_output_handler_interface_ce;
 zend_class_entry *p4_output_handler_abstract_ce;
 
+ZEND_BEGIN_ARG_INFO(__p4_output_args, 0)
+    ZEND_ARG_INFO(0,arg)
+ZEND_END_ARG_INFO()
+
 /* P4_OutputHandlerInterface Methods */
 static zend_function_entry perforce_p4_output_handler_interface_functions[] = {
-    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputStat,    NULL)
-    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputInfo,    NULL)
-    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputText,    NULL)
-    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputBinary,  NULL)
-    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputWarning, NULL)
-    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputError,   NULL)
+    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputStat,    __p4_output_args)
+    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputInfo,    __p4_output_args)
+    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputText,    __p4_output_args)
+    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputBinary,  __p4_output_args)
+    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputWarning, __p4_output_args)
+    PHP_ABSTRACT_ME(P4_OutputHandlerInterface, outputError,   __p4_output_args)
     { NULL, NULL, NULL }
 };
 
 /* P4_OutputHandlerAbstract Methods */
 static zend_function_entry perforce_p4_output_handler_abstract_functions[] = {
-    PHP_ME(    P4_OutputHandlerAbstract, outputStat,                NULL, ZEND_ACC_PUBLIC)
-    PHP_MALIAS(P4_OutputHandlerAbstract, outputInfo,    outputStat, NULL, ZEND_ACC_PUBLIC)
-    PHP_MALIAS(P4_OutputHandlerAbstract, outputText,    outputStat, NULL, ZEND_ACC_PUBLIC)
-    PHP_MALIAS(P4_OutputHandlerAbstract, outputBinary,  outputStat, NULL, ZEND_ACC_PUBLIC)
-    PHP_MALIAS(P4_OutputHandlerAbstract, outputWarning, outputStat, NULL, ZEND_ACC_PUBLIC)
-    PHP_MALIAS(P4_OutputHandlerAbstract, outputError,   outputStat, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(    P4_OutputHandlerAbstract, outputStat,                __p4_output_args, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(P4_OutputHandlerAbstract, outputInfo,    outputStat, __p4_output_args, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(P4_OutputHandlerAbstract, outputText,    outputStat, __p4_output_args, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(P4_OutputHandlerAbstract, outputBinary,  outputStat, __p4_output_args, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(P4_OutputHandlerAbstract, outputWarning, outputStat, __p4_output_args, ZEND_ACC_PUBLIC)
+    PHP_MALIAS(P4_OutputHandlerAbstract, outputError,   outputStat, __p4_output_args, ZEND_ACC_PUBLIC)
     { NULL, NULL, NULL }
 };
 

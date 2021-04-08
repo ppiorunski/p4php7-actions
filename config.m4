@@ -57,25 +57,11 @@ if test "$PHP_PERFORCE" != "no"; then
     PHP_ADD_INCLUDE($PERFORCE_INC_DIR)
 
     dnl other checks
-    API_LIBCLIENT="$PERFORCE_LIB_DIR/libclient.a"
-    AC_MSG_CHECKING([(P4PHP) for P4API libclient.a])
-    if [ ! test -r "$API_LIBCLIENT" ]; then
+    API_LIBP4API="$PERFORCE_LIB_DIR/libp4api.a"
+    AC_MSG_CHECKING([(P4PHP) for P4API libp4api.a])
+    if [ ! test -r "$API_LIBP4API" ]; then
         AC_MSG_RESULT([no, error])
-        AC_MSG_ERROR([(P4PHP) cannot find P4API client library ($API_LIBCLIENT)])
-    fi
-    AC_MSG_RESULT([yes])
-    API_LIBSUPP="$PERFORCE_LIB_DIR/libsupp.a"
-    AC_MSG_CHECKING([(P4PHP) for P4API libsupp.a])
-    if [ ! test -r "$API_LIBSUPP" ]; then
-        AC_MSG_RESULT([no, error])
-        AC_MSG_ERROR([(P4PHP) cannot find P4API Supplemental library ($API_LIBSUPP)])
-    fi
-    AC_MSG_RESULT([yes])
-    API_LIBRPC="$PERFORCE_LIB_DIR/librpc.a"
-    AC_MSG_CHECKING([(P4PHP) for P4API librpc.a])
-    if [ ! test -r "$API_LIBRPC" ]; then
-        AC_MSG_RESULT([no, error])
-        AC_MSG_ERROR([(P4PHP) cannot find P4API RPC library ($API_LIBRPC)])
+        AC_MSG_ERROR([(P4PHP) cannot find P4API client library ($API_LIBP4API)])
     fi
     AC_MSG_RESULT([yes])
 
@@ -113,7 +99,7 @@ if test "$PHP_PERFORCE" != "no"; then
     dnl get information about p4api version
     ID_API_REL=`cat "$PERFORCE_DIR/sample/Version" | grep "^RELEASE" | sed -e "s/.* = \(.*\) ;.*/\1/;s/ /./g"`
     ID_API_PATCH=`cat "$PERFORCE_DIR/sample/Version" | grep "^PATCHLEVEL" | sed -e "s/.* = \(.*\) ;.*/\1/;s/ /./g"`
-    ID_API_OS=`strings "$API_LIBCLIENT" | grep "^@(#)P4API" | awk -F/ '{print $2}'`
+    ID_API_OS=`strings "$API_LIBP4API" | grep "^@(#)P4API" | awk -F/ '{print $2}'`
 
     AC_MSG_CHECKING([(P4PHP) P4API Version file has RELEASE])
     if test -z "$ID_API_REL"; then
@@ -132,7 +118,7 @@ if test "$PHP_PERFORCE" != "no"; then
     AC_MSG_CHECKING([(P4PHP) P4API embedded version string OS portion])
     if test -z "$ID_API_OS"; then
         AC_MSG_RESULT([no, error])
-        AC_MSG_ERROR([(P4PHP) OS portion not found in P4API libclient.a embedded version string])
+        AC_MSG_ERROR([(P4PHP) OS portion not found in P4API libp4api.a embedded version string])
     fi
     AC_MSG_RESULT([$ID_API_OS])
 
@@ -262,9 +248,7 @@ if test "$PHP_PERFORCE" != "no"; then
     AC_DEFINE_UNQUOTED(ID_OS, "${OS}", [Setting OS ID])
 
     dnl link p4api libraries
-    PHP_ADD_LIBRARY_WITH_PATH(supp,   $PERFORCE_LIB_DIR, PERFORCE_SHARED_LIBADD)
-    PHP_ADD_LIBRARY_WITH_PATH(rpc,    $PERFORCE_LIB_DIR, PERFORCE_SHARED_LIBADD)
-    PHP_ADD_LIBRARY_WITH_PATH(client, $PERFORCE_LIB_DIR, PERFORCE_SHARED_LIBADD)
+    PHP_ADD_LIBRARY_WITH_PATH(p4api,   $PERFORCE_LIB_DIR, PERFORCE_SHARED_LIBADD)
 
     dnl If OpenSSL enabled, add openssl libs
     if test "$OPENSSL" == "yes"; then

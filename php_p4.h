@@ -61,6 +61,7 @@ PHP_METHOD(P4, set_protocol);
 PHP_METHOD(P4, set_var);
 PHP_METHOD(P4, set_evar);
 PHP_METHOD(P4, get_evar);
+PHP_METHOD(P4, set_trace);
 
 //
 // Register the P4 class with PHP

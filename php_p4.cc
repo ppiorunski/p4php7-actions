@@ -68,23 +68,72 @@ static void p4php_parse_or_format_spec(char *spectype, zval func, zval *args, IN
 static void p4php_run_cmd(char *cmd, zval func, zval *args, INTERNAL_FUNCTION_PARAMETERS);
 static void p4php_save_spec(char *spectype, zval func, zval *args, INTERNAL_FUNCTION_PARAMETERS);
 
+// reusable for functions with no parameters
+ZEND_BEGIN_ARG_INFO(__p4_no_args, 0)
+ZEND_END_ARG_INFO()
+// argument infos: magic functions:
 ZEND_BEGIN_ARG_INFO(__p4_set_args, 0)
-    ZEND_ARG_PASS_INFO(0)
-    ZEND_ARG_PASS_INFO(0)
+    ZEND_ARG_INFO(0,property)
+    ZEND_ARG_INFO(0,value)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO(__p4_get_args, 0)
-    ZEND_ARG_PASS_INFO(0)
+        ZEND_ARG_INFO(0,property)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO(__p4_isset_args, 0)
-    ZEND_ARG_PASS_INFO(0)
+    ZEND_ARG_INFO(0,isset_args)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO(__p4_call_args, 0)
-    ZEND_ARG_PASS_INFO(0)
-    ZEND_ARG_PASS_INFO(0)
+    ZEND_ARG_INFO(0,call_arg_1)
+    ZEND_ARG_INFO(0,call_arg_2)
 ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO(__p4_unset_args, 0)
-    ZEND_ARG_PASS_INFO(0)
+    ZEND_ARG_INFO(0,unset_arg_1)
 ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_env_args, 0)
+    ZEND_ARG_INFO(0,var)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_format_spec_args, 0)
+    ZEND_ARG_INFO(0,spectype)
+    ZEND_ARG_ARRAY_INFO(0,dict,0)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_parse_spec_args, 0)
+    ZEND_ARG_INFO(0,spectype)
+    ZEND_ARG_INFO(0,spec)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_run_args, 0)
+    ZEND_ARG_INFO(0,command)
+    ZEND_ARG_VARIADIC_INFO(0,mixed)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_run_filelog_args, 0)
+    ZEND_ARG_INFO(0,fileSpec)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_run_login_args, 0)
+    ZEND_ARG_INFO(0,password)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_run_password_args, 0)
+    ZEND_ARG_INFO(0,oldpass)
+    ZEND_ARG_INFO(0,newpass)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_run_resolve_args, 0)
+    ZEND_ARG_INFO(0,resolver)
+    ZEND_ARG_ARRAY_INFO(0,args,0)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_set_protocol_args, 0)
+    ZEND_ARG_INFO(0,key)
+    ZEND_ARG_INFO(0,value)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_set_var_args, 0)
+    ZEND_ARG_INFO(0,key)
+    ZEND_ARG_INFO(0,value)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_set_evar_args, 0)
+    ZEND_ARG_INFO(0,key)
+    ZEND_ARG_INFO(0,value)
+ZEND_END_ARG_INFO()
+
+
+// member function argument describtions:
+
 
 /* Client API Properties */
 static property_t p4_properties[] = {
@@ -132,29 +181,30 @@ static property_t p4_properties[] = {
 
 /* P4 Class Methods */
 static zend_function_entry perforce_p4_functions[] = {
-    PHP_ME(P4, __construct,  NULL,            ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(P4, __set,        __p4_set_args,   ZEND_ACC_PUBLIC)
-    PHP_ME(P4, __get,        __p4_get_args,   ZEND_ACC_PUBLIC)
-    PHP_ME(P4, __isset,      __p4_isset_args, ZEND_ACC_PUBLIC)
-    PHP_ME(P4, __call,       __p4_call_args,  ZEND_ACC_PUBLIC)
-    PHP_ME(P4, __unset,      __p4_unset_args, ZEND_ACC_PUBLIC)
-    PHP_ME(P4, connect,      NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, connected,    NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, disconnect,   NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, env,          NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, format_spec,  NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, identify,     NULL,            ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-    PHP_ME(P4, parse_spec,   NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, run,          NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, run_filelog,  NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, run_login,    NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, run_password, NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, run_resolve,  NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, run_submit,   NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, set_protocol, NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, set_var,      NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, set_evar,     NULL,            ZEND_ACC_PUBLIC)
-    PHP_ME(P4, get_evar,     NULL,            ZEND_ACC_PUBLIC)
+    PHP_ME(P4, __construct,  __p4_no_args,              ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(P4, __set,        __p4_set_args,             ZEND_ACC_PUBLIC)
+    PHP_ME(P4, __get,        __p4_get_args,             ZEND_ACC_PUBLIC)
+    PHP_ME(P4, __isset,      __p4_isset_args,           ZEND_ACC_PUBLIC)
+    PHP_ME(P4, __call,       __p4_call_args,            ZEND_ACC_PUBLIC)
+    PHP_ME(P4, __unset,      __p4_unset_args,           ZEND_ACC_PUBLIC)
+    PHP_ME(P4, connect,      __p4_no_args,              ZEND_ACC_PUBLIC)
+    PHP_ME(P4, connected,    __p4_no_args,              ZEND_ACC_PUBLIC)
+    PHP_ME(P4, disconnect,   __p4_no_args,              ZEND_ACC_PUBLIC)
+    PHP_ME(P4, env,          __p4_env_args,             ZEND_ACC_PUBLIC)
+    PHP_ME(P4, format_spec,  __p4_format_spec_args,     ZEND_ACC_PUBLIC)
+    PHP_ME(P4, identify,     __p4_no_args,              ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(P4, parse_spec,   __p4_parse_spec_args,      ZEND_ACC_PUBLIC)
+    PHP_ME(P4, run,          __p4_run_args,             ZEND_ACC_PUBLIC)
+    PHP_ME(P4, run_filelog,  __p4_run_filelog_args,     ZEND_ACC_PUBLIC)
+    PHP_ME(P4, run_login,    __p4_run_login_args,       ZEND_ACC_PUBLIC)
+    PHP_ME(P4, run_password, __p4_run_password_args,    ZEND_ACC_PUBLIC)
+    PHP_ME(P4, run_resolve,  __p4_run_resolve_args,     ZEND_ACC_PUBLIC)
+    PHP_ME(P4, run_submit,   __p4_no_args,              ZEND_ACC_PUBLIC)
+    PHP_ME(P4, set_protocol, __p4_set_protocol_args,    ZEND_ACC_PUBLIC)
+    PHP_ME(P4, set_var,      __p4_set_var_args,         ZEND_ACC_PUBLIC)
+    PHP_ME(P4, set_evar,     __p4_set_evar_args,        ZEND_ACC_PUBLIC)
+    PHP_ME(P4, get_evar,     __p4_env_args,             ZEND_ACC_PUBLIC)
+    PHP_ME(P4, set_trace,    __p4_no_args,              ZEND_ACC_PUBLIC)
     { NULL, NULL, NULL }
 };
 
@@ -264,9 +314,13 @@ PHP_METHOD(P4, __get)
      * php class behaviour, could be an undeclared field set at runtime. */
     if (!found) {
 	zval rv;
-        zval *rval = zend_read_property(p4_ce, getThis(), name, sizeof(name) - 1, 0, &rv);
+	#if ( PHP_VERSION_ID < 80000) 
+    	zval *rval = zend_read_property(p4_ce, getThis(), name, sizeof(name) - 1, 0, &rv);
+	#else 
+		zval *rval = zend_read_property(p4_ce, Z_OBJ_P(getThis()), name, sizeof(name) - 1, 0, &rv);
+    #endif
 	ZVAL_DUP(return_value, rval);
-	
+
 	return;
     }
 
@@ -317,8 +371,11 @@ PHP_METHOD(P4, __set)
 
     /* fallback to default php behaviour if attribute is not found. */
     if (!found) {
-        zend_update_property(p4_ce, getThis(), name, sizeof(name) - 1,
-            value TSRMLS_CC);
+      	#if ( PHP_VERSION_ID < 80000)
+          zend_update_property(p4_ce, getThis(), name, sizeof(name) - 1, value TSRMLS_CC);
+        #else
+            zend_update_property(p4_ce, Z_OBJ_P(getThis()), name, sizeof(name) - 1, value TSRMLS_CC);
+        #endif
     }
 }
 /* }}} */
@@ -622,7 +679,12 @@ void enumerate_how(zval *record, zval *integrations, zend_string *key)
 	    php_error(E_WARNING, "Could not retrieve P4_Integration instance", 1);
 	    continue;
 	}
-	zend_update_property_ex(get_p4_integration_ce(), integration, key, record_elem);
+
+  #if ( PHP_VERSION_ID < 80000) 
+    zend_update_property_ex(get_p4_integration_ce(), integration, key, record_elem);
+  #else 
+    zend_update_property_ex(get_p4_integration_ce(), Z_OBJ_P(integration), key, record_elem);
+  #endif
 	counter++;
     }
     ZEND_HASH_FOREACH_END();
@@ -666,7 +728,11 @@ enumerate_revisions(zend_class_entry* ce, zval& p4_depotfile, zval *val, zval* r
 	// If we found a non-array entry, it's the depotFile - assign it
 	// and move on
 	if ( Z_TYPE_P(values) != IS_ARRAY ) {
+    #if ( PHP_VERSION_ID < 80000) 
 	    zend_update_property(ce, &p4_depotfile, ZEND_STRS("depotFile") - 1, values);
+    #else 
+      zend_update_property(ce, Z_OBJ_P(&p4_depotfile), ZEND_STRS("depotFile") - 1, values);
+    #endif
 	    continue;
 	}
 
@@ -691,7 +757,11 @@ enumerate_revisions(zend_class_entry* ce, zval& p4_depotfile, zval *val, zval* r
 	// if it's not an array, simply set the property on the
 	// P4_Revision object.
 	if ( Z_TYPE_P(values) != IS_ARRAY ) {
+    #if ( PHP_VERSION_ID < 80000) 
 	    zend_update_property_ex(get_p4_revision_ce(), revision, key, values);
+    #else
+      zend_update_property_ex(get_p4_revision_ce(), Z_OBJ_P(revision), key, values);
+    #endif
 	    continue;
 	}
 	// extract the element from the values array that corresponds
@@ -702,7 +772,11 @@ enumerate_revisions(zend_class_entry* ce, zval& p4_depotfile, zval *val, zval* r
 	    continue;
 	}
 	if ( Z_TYPE_P(record) != IS_ARRAY ) {
+    #if ( PHP_VERSION_ID < 80000)
 	    zend_update_property_ex(get_p4_revision_ce(), revision, key, record);
+    #else
+      zend_update_property_ex(get_p4_revision_ce(), Z_OBJ_P(revision), key, record);
+    #endif
 	    continue;
 	}
 	// at this point we're probably dealing with an integration
@@ -848,8 +922,13 @@ PHP_METHOD(P4, run_filelog)
             enumerate_revisions(ce, p4_depotfile, val, revision, i, &integrations);
 
             if (!Z_ISNULL(integrations)) {
+              #if ( PHP_VERSION_ID < 80000) 
                 zend_update_property(get_p4_revision_ce(), revision,
                                      ZEND_STRS("integrations")-1, &integrations TSRMLS_CC);
+              #else
+                zend_update_property(get_p4_revision_ce(), Z_OBJ_P(revision),
+                                     ZEND_STRS("integrations")-1, &integrations TSRMLS_CC);
+              #endif
                 Z_TRY_DELREF(integrations);
             }
 
@@ -864,7 +943,11 @@ PHP_METHOD(P4, run_filelog)
             }
         }
 
-        zend_update_property(ce, &p4_depotfile, ZEND_STRS("revisions")-1, &revisions TSRMLS_CC);
+        #if ( PHP_VERSION_ID < 80000) 
+          zend_update_property(ce, &p4_depotfile, ZEND_STRS("revisions")-1, &revisions TSRMLS_CC);
+        #else 
+          zend_update_property(ce, Z_OBJ_P(&p4_depotfile), ZEND_STRS("revisions")-1, &revisions TSRMLS_CC);
+        #endif
         Z_TRY_DELREF(revisions);
         add_next_index_zval(return_value, &p4_depotfile);
     }
@@ -1031,14 +1114,14 @@ PHP_METHOD(P4, run_submit)
         if (Z_TYPE(args[0]) == IS_ARRAY) {
             client->SetInput(&args[0]);
         }
-    } else if (argc == 2) {        
+    } else if (argc == 2) {
         params = (zval *)safe_emalloc(argc + 1, sizeof(zval), 0);
         params[0] = param0;
-        // first parameter will be submit flag(s). 
+        // first parameter will be submit flag(s).
         params[1] = args[0];
         // convert args[1] to an array
         if (Z_TYPE(args[1]) == IS_ARRAY) {
-            // second parameter will be a hash. 
+            // second parameter will be a hash.
             client = get_client_api(object);
             client->SetInput(&args[1]);
         } else {
@@ -1049,7 +1132,7 @@ PHP_METHOD(P4, run_submit)
     } else {
         params = (zval *)safe_emalloc(argc + 1, sizeof(zval), 0);
         params[0] = param0;
-        // feed parameters into run submit. 
+        // feed parameters into run submit.
         for (int i = 0; i < argc; i++) {
             params[i + 1] = args[i];
         }
@@ -1124,6 +1207,27 @@ PHP_METHOD(P4, set_evar)
     RETURN_NULL();
 }
 /* }}} */
+
+/* {{{ proto null P4::set_trace(string file, string level)
+    Enables debug trace logging for the Perforce connection. */
+PHP_METHOD(P4, set_trace)
+{
+    char *file, *level;
+    size_t file_len, level_len;
+    PHPClientAPI *client;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, (char *)"ss",
+            &file, &file_len, &level, &level_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    client = get_client_api(getThis());
+    client->SetTrace(file, level);
+
+    RETURN_NULL();
+}
+/* }}} */
+
 
 /* {{{ proto string P4::env(string var)
     Get a extended value from the environment following the Perforce conventions,
@@ -1488,4 +1592,3 @@ static bool p4php_client_is_tagged(zval *this_ptr)
     client->GetTagged(&tagged);
     return ( Z_TYPE(tagged) == IS_TRUE );
 }
-                                                  

@@ -31,30 +31,58 @@ extern "C"
 {
     #include "php.h"
 }
-
+#include "php_macros.h"
 #include "php_perforce.h"
 
 #include "php_p4_map.h"
+#include <iostream>
 
 
 zend_class_entry *p4_map_ce;
 static zend_object_handlers p4map_object_handlers;
 
+
+ZEND_BEGIN_ARG_INFO(__p4_no_args, 0)
+ZEND_END_ARG_INFO()
+// methods argument descriptions:
+ZEND_BEGIN_ARG_INFO(__p4___construct_args, 0)
+    ZEND_ARG_INFO(0,arg1)
+    ZEND_ARG_INFO(0,arg2)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_join_args, 0)
+    ZEND_ARG_INFO(0,arg1)
+    ZEND_ARG_INFO(0,arg2)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_insert_args, 0)
+    ZEND_ARG_INFO(0,arg1)
+    ZEND_ARG_INFO(0,arg2)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_translate_args, 0)
+    ZEND_ARG_INFO(0,str)
+    ZEND_ARG_INFO(0,forward)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_includes_args, 0)
+    ZEND_ARG_INFO(0,str)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(__p4_set_case_sensitive_args, 0)
+    ZEND_ARG_INFO(0,sensitive)
+ZEND_END_ARG_INFO()
+
 /* P4_Map Class Methods */
 static zend_function_entry perforce_p4_map_methods[] = {
-    PHP_ME(P4_Map, __construct,  NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(P4_Map, join,         NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-    PHP_ME(P4_Map, clear,        NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, count,        NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, is_empty,     NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, insert,       NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, translate,    NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, includes,     NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, reverse,      NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, lhs,          NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, rhs,          NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, as_array,     NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(P4_Map, set_case_sensitive, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, __construct,  __p4___construct_args, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(P4_Map, join,         __p4_join_args, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(P4_Map, clear,        __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, count,        __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, is_empty,     __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, insert,       __p4_insert_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, translate,    __p4_translate_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, includes,     __p4_includes_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, reverse,      __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, lhs,          __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, rhs,          __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, as_array,     __p4_no_args, ZEND_ACC_PUBLIC)
+    PHP_ME(P4_Map, set_case_sensitive, __p4_no_args, ZEND_ACC_PUBLIC)
     { NULL, NULL, NULL }
 };
 
@@ -312,8 +340,7 @@ PHP_METHOD(P4_Map, includes)
     size_t path_len;
     zval zpath;
     P4MapMaker *mapmaker;
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", 
+    if (zend_parse_parameters_ex(ZEND_PARSE_PARAMS_QUIET,ZEND_NUM_ARGS() TSRMLS_CC, "s", 
             &path, &path_len) == FAILURE) {
         RETURN_NULL();
     }

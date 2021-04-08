@@ -92,6 +92,8 @@
 #define PHP_CLIENT_API_H
 
 class Enviro;
+class ErrorLog;
+class P4DebugConfig;
 class PHPClientAPI
 {
     public:
@@ -234,6 +236,7 @@ class PHPClientAPI
     void SetSSOFailResult( zval *r );
     void GetSSOFailResult( zval *retval );
 
+    void SetTrace( const char *file, const char *level );
 
     private:
 
@@ -245,6 +248,9 @@ class PHPClientAPI
     StrBuf ticketFile;
     StrBuf prog;
     StrBuf version;
+
+    ErrorLog      *reportLog;
+    P4DebugConfig *p4debugHelper;
 
     int  depth;
     bool connected;

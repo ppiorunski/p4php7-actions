@@ -1,7 +1,7 @@
                            Release Notes for
                 P4PHP, Perforce's script API for PHP
 
-                            Version 2020.1
+                            Version 2020.2
 
 Introduction
 
@@ -31,17 +31,15 @@ Unix and Mac: Building the P4PHP Extension
     After you have obtained the required files and the phpize utility,
     perform the following steps:
 
-    1. Download the Perforce P4PHP files. Go to the Perforce FTP site at
-       "ftp://ftp.perforce.com/perforce", go under the release
-       subdirectory and look in the bin.tools directory for a release which
-       matches your php version (5 or 7) (for example,
-       ftp://ftp.perforce.com/perforce/r19.2/bin.tools/p4php-php7.tgz) for
-       the 2020.1 P4PHP.
+    1. Download the Perforce P4PHP files.
+       ftp://ftp.perforce.com/perforce/r20.2/bin.tools/p4php.tgz
+       for the 2020.2 P4PHP.
 
     2. Download the Perforce C++ API from the Perforce FTP site at
        "ftp://ftp.perforce.com/perforce". The API archive is located
-       in release and platform-specific subdirectories and is named
-       "p4api.tgz".
+       in release and platform-specific subdirectories, choose one
+       matching OpenSSL version available at target system and the
+       C library, for example p4api-glibc2.12-openssl1.1.1.tgz.
 
        Note: 32-bit builds of P4PHP require a 32-bit version of the
              C++ API and a 32-bit version of PHP. 64-bit builds of
@@ -99,7 +97,7 @@ Unix and Mac: Building the P4PHP Extension
     SSL support
     -----------
 
-    Perforce Server 2020.1 supports SSL connections and the C++ API has
+    Perforce Server 2020.2 supports SSL connections and the C++ API has
     been compiled with this support. This means that in order to build
     P4PHP, the underlying PHP framework must include OpenSSL.
 
@@ -175,17 +173,17 @@ Compatibility Statements
 
     API Compatibility
 
-        The 2020.1 release of P4PHP requires the 2020.1 Perforce API.
+        The 2020.2 release of P4PHP requires the 2020.2 Perforce API.
         Older releases will not work and will fail to compile.
 
     OpenSSL compatibility
 
         The minimum version of OpenSSL libraries required is driven
-        by the 2020.1 server; the minimum version needed is 1.0.0.
+        by the 2020.2 server; the minimum version needed is 1.0.2.
 
     PHP compatibility
 
-        The 2020.1 release of P4PHP is compatible with PHP versions: 7.0.x - 7.4.x
+        The 2020.2 release of P4PHP is compatible with PHP versions: 7.2.x - 8.0.x
 
     Platform compatibility
 
@@ -212,6 +210,21 @@ Key to symbols used in change notes below.
       * -- requires new P4PHP
      ** -- requires P4PHP built with new P4API
     *** -- requires new p4d server program
+
+--------------------------------------------------------------------------
+
+New functionality in 2020.2
+
+    #2106233 (Job #106089) * ** ***
+        Updated the stored spec templates to match the 2020.2 server
+        specs. This ensures new features are present in specs which are
+        accessed offline.
+
+    #2102271 (Job #102149) * **
+        Added support for PHP 8.0
+
+    #2093736 (Job #106090) * **
+         Parallel sync no longer requires p4 executable.
 
 --------------------------------------------------------------------------
 

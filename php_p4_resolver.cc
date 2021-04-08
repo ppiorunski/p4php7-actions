@@ -31,7 +31,7 @@ extern "C"
 {
     #include "php.h"
 }
-
+#include "php_macros.h"
 #include "php_perforce.h"
 #include "php_mergedata.h"
 #include "php_p4_mergedata.h"
@@ -40,10 +40,17 @@ extern "C"
 
 zend_class_entry *p4_resolver_ce;
 
+ZEND_BEGIN_ARG_INFO(__p4_no_args, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(__p4_resolve_args, 0)
+    ZEND_ARG_INFO(0,merge_data)
+ZEND_END_ARG_INFO()
+
 /* P4_Resolver Class Methods */
 static zend_function_entry perforce_p4_resolver_functions[] = {
-    PHP_ME(P4_Resolver, __construct,  NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(P4_Resolver, resolve,      NULL, ZEND_ACC_PUBLIC | ZEND_ACC_ABSTRACT)
+    PHP_ME(P4_Resolver, __construct,  __p4_no_args, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(P4_Resolver, resolve,      __p4_resolve_args, ZEND_ACC_PUBLIC | ZEND_ACC_ABSTRACT)
     { NULL, NULL, NULL }
 };
 
@@ -87,7 +94,11 @@ PHP_METHOD(P4_Resolver, resolve)
 
     ce = get_p4_mergedata_ce();
     zval rv;
-    merge_hint = zend_read_property(ce, merge_info, ZEND_STRS("merge_hint") - 1, 0, &rv);
+    #if (PHP_VERSION_ID < 80000) 
+      merge_hint = zend_read_property(ce, merge_info, ZEND_STRS("merge_hint") - 1, 0, &rv);
+    #else
+      merge_hint = zend_read_property(ce, Z_OBJ_P(merge_info), ZEND_STRS("merge_hint") - 1, 0, &rv);
+    #endif
     
     if (Z_TYPE_P(merge_hint) != IS_STRING) {
         RETURN_NULL();
