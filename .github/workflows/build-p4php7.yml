@@ -107,7 +107,7 @@ jobs:
     - name: Get docker image
       run: docker pull $Env:docker
 
-    - name: Build P4Php 7.2 Openssl 1.1.1
+    - name: Build P4Php for php ${{ matrix.arch }} and OpenSSL 1.1.1
       run: |
         docker run `
         -v $Env:phpMount `
@@ -117,7 +117,7 @@ jobs:
         -v $Env:phpSdkMount `
         --env PHP_MINOR_VER=${{ matrix.phpMinor }} --env arch=${{ matrix.arch }} --env TS=${{ matrix.TS }} `
         $Env:docker
-        move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
+      #  move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
 
     - uses: actions/upload-artifact@v2
       with:
