@@ -1,7 +1,7 @@
 name: Build P4Php
 
 env:
-  codeline:       "r20.1"
+  codeline:       "r20.2"
 
   # Linux build variables:
   P4APIDIR:       "${{ github.workspace }}/../p4api:/p4/build/p4api"
@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         ssl: [1.1.1, 1.0.2]
-        php: [70, 71, 72, 73, 74]
+        php: [72, 73, 74]
     steps:
 
     - name: Checkout source code
@@ -44,8 +44,8 @@ jobs:
       run: |
         dir
         pwd
-        cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz
-        tar -xvf p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && rm p4api-glibc2.3-openssl${{ matrix.ssl }}.tgz && mv p4api* p4api && ls -la && cd ${{ github.workspace }} && pwd
+        cd .. && wget ftp://ftp.perforce.com/perforce/$codeline/bin.linux26x86_64/p4api-glibc2.12-openssl${{ matrix.ssl }}.tgz
+        tar -xvf p4api-glibc2.12-openssl${{ matrix.ssl }}.tgz && rm p4api-glibc2.12-openssl${{ matrix.ssl }}.tgz && mv p4api* p4api && ls -la && cd ${{ github.workspace }} && pwd
 
     - name: Get p4 and p4d binary
       run: |
