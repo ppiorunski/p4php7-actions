@@ -70,9 +70,12 @@ jobs:
     runs-on: windows-2019
     strategy:
       matrix:
-        TS: [TS, NTS]
-        phpMinor: [2, 3, 4]
-        arch: [x86, x64]
+        TS: [NTS]
+        phpMinor: [4]
+        arch: [x64]
+        #TS: [TS, NTS]
+        #phpMinor: [2, 3, 4]
+        #arch: [x86, x64]
     steps:
 
     - name: Checkout source code
