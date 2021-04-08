@@ -1,7 +1,7 @@
 name: Build P4Php
 
 env:
-  codeline:       "r20.2"
+  codeline:       "r20.1"
 
   # Linux build variables:
   P4APIDIR:       "${{ github.workspace }}/../p4api:/p4/build/p4api"
