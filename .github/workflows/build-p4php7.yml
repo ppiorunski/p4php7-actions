@@ -117,6 +117,7 @@ jobs:
         -v $Env:phpSdkMount `
         --env PHP_MINOR_VER=${{ matrix.phpMinor }} --env arch=${{ matrix.arch }} --env TS=${{ matrix.TS }} `
         $Env:docker
+        dir ${{ github.workspace }}\..\p4-bin\
         dir ${{ github.workspace }}\
         dir ${{ github.workspace }}\..
         dir ${{ github.workspace }}\..\p4-bin\
