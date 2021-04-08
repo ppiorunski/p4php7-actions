@@ -120,6 +120,7 @@ jobs:
         dir ${{ github.workspace }}\
         dir ${{ github.workspace }}\..
         dir ${{ github.workspace }}\..\p4-bin\
+        dir ${{ github.workspace }}\p4-bin
 
       #  move ${{ github.workspace }}\..\p4-bin\perforce_php7${{ matrix.phpMinor }}${{ matrix.TS }}.dll ${{ github.workspace }}\perforce_php7${{ matrix.phpMinor }}_${{ matrix.arch }}_${{ matrix.TS }}.dll
 
